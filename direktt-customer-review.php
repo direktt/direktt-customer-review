@@ -24,7 +24,7 @@ function direktt_customer_review_activation_check() {
     $required_plugin = 'direktt-plugin/direktt.php';
 
     if ( ! is_plugin_active( $required_plugin ) ) {
-        add_action('after_plugin_row_direktt-customer-review/direktt-customer-review.php', function ( $plugin_file, $plugin_data, $status ) {
+        add_action( 'after_plugin_row_direktt-customer-review/direktt-customer-review.php', function ( $plugin_file, $plugin_data, $status ) {
             $colspan = 3;
             ?>
             <tr class="plugin-update-tr">
