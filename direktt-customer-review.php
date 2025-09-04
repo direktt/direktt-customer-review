@@ -47,7 +47,7 @@ function setup_review_settings_page() {
     Direktt::add_settings_page(
         array(
             "id" => "review",
-            "label" => __( 'Review Settings', 'direktt-customer-review' ),
+            "label" => esc_html__( 'Customer Review Settings', 'direktt-customer-review' ),
             "callback" => 'render_review_settings_page',
             "priority" => 2,
         )
@@ -385,7 +385,7 @@ function direktt_send_review_messages( $subscription_id ) {
     Direktt_Message::send_message( array( $subscription_id => $review_message ) );
 
     $admin_message = sprintf(
-        __( 'Review template sent to user %s (%s)', 'direktt-customer-review' ),
+        esc_html__( 'Review template sent to user %s (%s)', 'direktt-customer-review' ),
         esc_html( $display_name ),
         esc_html( $subscription_id )
     );
