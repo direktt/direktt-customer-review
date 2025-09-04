@@ -41,24 +41,6 @@ function direktt_customer_review_activation_check() {
     }
 }
 
-function direktt_review_activation_check() {
-    if ( ! function_exists( 'is_plugin_active' ) ) {
-        require_once ABSPATH . 'wp-admin/includes/plugin.php';
-    }
-
-    $required_plugin = 'direktt-plugin/direktt.php';
-
-    if ( ! is_plugin_active( $required_plugin ) ) {
-        deactivate_plugins( plugin_basename( __FILE__ ) );
-
-        wp_die(
-            esc_html__( 'Direktt Review plugin requires the Direktt Plugin to be active. Please activate Direktt Plugin first.', 'direktt-customer-review' ),
-            esc_html__( 'Plugin Activation Error', 'direktt-customer-review' ),
-            array( 'back_link' => true )
-        );
-    }
-}
-
 add_action('direktt_setup_settings_pages', 'setup_review_settings_page');
 
 function setup_review_settings_page() {
