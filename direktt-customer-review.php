@@ -1,8 +1,45 @@
 <?php
 
-// Plugin Name: Direktt Review
+/**
+ * Plugin Name: Direktt Customer Review
+ * Description: Direktt Customer Review Direktt Plugin
+ * Version: 1.0.0
+ * Author: Direktt
+ * Author URI: https://direktt.com/
+ * License: GPL2
+ */
 
-register_activation_hook( __FILE__, 'direktt_review_activation_check' );
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+add_action( 'plugins_loaded', 'direktt_customer_review_activation_check', -20 );
+
+function direktt_customer_review_activation_check() {
+    if ( ! function_exists( 'is_plugin_active' ) ) {
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
+
+    $required_plugin = 'direktt-plugin/direktt.php';
+
+    if ( ! is_plugin_active( $required_plugin ) ) {
+        add_action('after_plugin_row_direktt-customer-review/direktt-customer-review.php', function ( $plugin_file, $plugin_data, $status ) {
+            $colspan = 3;
+            ?>
+            <tr class="plugin-update-tr">
+                <td colspan="<?php echo esc_attr( $colspan ); ?>" style="box-shadow: none;">
+                    <div style="color: #b32d2e; font-weight: bold;">
+                        <?php echo esc_html__( 'Direktt Customer Review requires the Direktt WordPress Plugin to be active. Please activate Direktt WordPress Plugin first.', 'direktt-customer-review' ); ?>
+                    </div>
+                </td>
+            </tr>
+            <?php
+        }, 10, 3);
+
+        deactivate_plugins( plugin_basename( __FILE__ ) );
+    }
+}
 
 function direktt_review_activation_check() {
     if ( ! function_exists( 'is_plugin_active' ) ) {
@@ -15,8 +52,8 @@ function direktt_review_activation_check() {
         deactivate_plugins( plugin_basename( __FILE__ ) );
 
         wp_die(
-            esc_html__( 'Direktt Review plugin requires the Direktt Plugin to be active. Please activate Direktt Plugin first.', 'direktt-review' ),
-            esc_html__( 'Plugin Activation Error', 'direktt-review' ),
+            esc_html__( 'Direktt Review plugin requires the Direktt Plugin to be active. Please activate Direktt Plugin first.', 'direktt-customer-review' ),
+            esc_html__( 'Plugin Activation Error', 'direktt-customer-review' ),
             array( 'back_link' => true )
         );
     }
@@ -28,7 +65,7 @@ function setup_review_settings_page() {
     Direktt::add_settings_page(
         array(
             "id" => "review",
-            "label" => __( 'Review Settings', 'direktt-review' ),
+            "label" => __( 'Review Settings', 'direktt-customer-review' ),
             "callback" => 'render_review_settings_page',
             "priority" => 2,
         )
@@ -86,7 +123,7 @@ function render_review_settings_page() {
 
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="direktt_review_template"><?php echo esc_html__( 'Review Message Template', 'direktt-review' ); ?></label></th>
+                    <th scope="row"><label for="direktt_review_template"><?php echo esc_html__( 'Review Message Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <select name="direktt_review_template" id="direktt_review_template">
                             <option value="0">Select Template</option>
@@ -192,7 +229,7 @@ function setup_review_profile_tools() {
     Direktt_Profile::add_profile_tool(
         array(
             "id" => "review-profile-tool",
-            "label" => __( 'Reviews', 'direktt-review' ),
+            "label" => __( 'Reviews', 'direktt-customer-review' ),
             "callback" => 'render_review_profile_tool',
             "categories" => [],
             "tags" => [],
@@ -213,7 +250,7 @@ function render_review_profile_tool() {
     ?>
     <div class="direktt-review-profile-tool">
         <div class="header">
-            <h2><?php echo esc_html__( 'Recent Reviews', 'direktt-review' ); ?></h4>
+            <h2><?php echo esc_html__( 'Recent Reviews', 'direktt-customer-review' ); ?></h4>
         </div>
         <div class="reviews-list">
             <?php
@@ -230,7 +267,7 @@ function render_review_profile_tool() {
                 }
                 echo '</ul>';
             } else {
-                echo '<p>' . esc_html__( 'No reviews found.', 'direktt-review' ) . '</p>';
+                echo '<p>' . esc_html__( 'No reviews found.', 'direktt-customer-review' ) . '</p>';
             }
             ?>
         </div>
@@ -241,7 +278,7 @@ function render_review_profile_tool() {
 function direktt_review_add_meta_box() {
     add_meta_box(
         'direktt_review_program_meta_box',
-        __( 'Reviews', 'direktt-review' ),
+        __( 'Reviews', 'direktt-customer-review' ),
         'render_review_meta_box',
         'direkttusers',
         'side',
@@ -259,10 +296,10 @@ function render_review_meta_box( $post ) {
     <div class="direktt-review-meta-box">
         <div class="header">
             <button class="button direktt-send-review" data-subscription-id="<?php echo esc_attr( $subscription_id ); ?>">
-                <?php echo esc_html__( 'Send review template to user', 'direktt-review' ); ?>
+                <?php echo esc_html__( 'Send review template to user', 'direktt-customer-review' ); ?>
             </button>
             <?php wp_nonce_field( 'direktt_send_review_template', 'direktt_send_review_template_nonce' ); ?>
-            <h4><?php echo esc_html__( 'Recent Reviews', 'direktt-review' ); ?></h4>
+            <h4><?php echo esc_html__( 'Recent Reviews', 'direktt-customer-review' ); ?></h4>
             <script>
                 jQuery(document).ready(function ($) {
                     $('.direktt-send-review').on('click', function () {
@@ -273,7 +310,7 @@ function render_review_meta_box( $post ) {
                             subscriptionId: subscriptionId,
                             nonce: $('#direktt_send_review_template_nonce').val()
                         };
-                        $( this ).prop('disabled', true).text('<?php echo esc_js( __( 'Sending...', 'direktt-review' ) ); ?>');
+                        $( this ).prop('disabled', true).text('<?php echo esc_js( __( 'Sending...', 'direktt-customer-review' ) ); ?>');
                         $.ajax({
                             url: ajaxurl,
                             type: 'POST',
@@ -284,11 +321,11 @@ function render_review_meta_box( $post ) {
                                 } else {
                                     alert(response.data.error);
                                 }
-                                $( '.direktt-send-review' ).prop('disabled', false).text('<?php echo esc_js( __( 'Send review template to user', 'direktt-review' ) ); ?>');
+                                $( '.direktt-send-review' ).prop('disabled', false).text('<?php echo esc_js( __( 'Send review template to user', 'direktt-customer-review' ) ); ?>');
                             },
                             error: function () {
-                                alert('<?php echo esc_js( __( 'An error occurred while sending the review template.', 'direktt-review' ) ); ?>');
-                                $( '.direktt-send-review' ).prop('disabled', false).text('<?php echo esc_js( __( 'Send review template to user', 'direktt-review' ) ); ?>');
+                                alert('<?php echo esc_js( __( 'An error occurred while sending the review template.', 'direktt-customer-review' ) ); ?>');
+                                $( '.direktt-send-review' ).prop('disabled', false).text('<?php echo esc_js( __( 'Send review template to user', 'direktt-customer-review' ) ); ?>');
                             }
                         });
                     });
@@ -310,7 +347,7 @@ function render_review_meta_box( $post ) {
                 }
                 echo '</ul>';
             } else {
-                echo '<p>' . esc_html__( 'No reviews found.', 'direktt-review' ) . '</p>';
+                echo '<p>' . esc_html__( 'No reviews found.', 'direktt-customer-review' ) . '</p>';
             }
             ?>
         </div>
@@ -366,7 +403,7 @@ function direktt_send_review_messages( $subscription_id ) {
     Direktt_Message::send_message( array( $subscription_id => $review_message ) );
 
     $admin_message = sprintf(
-        __( 'Review template sent to user %s (%s)', 'direktt-review' ),
+        __( 'Review template sent to user %s (%s)', 'direktt-customer-review' ),
         esc_html( $display_name ),
         esc_html( $subscription_id )
     );
@@ -381,14 +418,14 @@ function direktt_send_review_messages( $subscription_id ) {
 
 function handle_direktt_send_review_template() {
     if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'direktt_send_review_template' ) ) {
-        wp_send_json_error( array( 'error' => __( 'Invalid nonce.', 'direktt-review' ) ) );
+        wp_send_json_error( array( 'error' => __( 'Invalid nonce.', 'direktt-customer-review' ) ) );
     }
 
     $subscription_id = sanitize_text_field( $_POST['subscriptionId'] );
 
     direktt_send_review_messages( $subscription_id );
 
-    wp_send_json_success( array( 'message' => __( 'Review template sent successfully.', 'direktt-review' ) ) );
+    wp_send_json_success( array( 'message' => __( 'Review template sent successfully.', 'direktt-customer-review' ) ) );
 }
 
 
@@ -401,7 +438,7 @@ function on_init_review() {
     direktt_send_review_messages($subscription_id);
 
     $data = array(
-        'message' => __( 'Review messages sent successfully.', 'direktt-review' ),
+        'message' => __( 'Review messages sent successfully.', 'direktt-customer-review' ),
     );
     wp_send_json_success($data, 200);
 }
