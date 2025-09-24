@@ -231,10 +231,10 @@ function render_review_profile_tool() {
 
     ?>
     <div class="direktt-review-profile-tool">
-        <div class="header">
-            <h2><?php echo esc_html__( 'Recent Reviews', 'direktt-customer-review' ); ?></h4>
+        <div class="direktt-review-header">
+            <h2><?php echo esc_html__( 'Recent Reviews', 'direktt-customer-review' ); ?></h2>
         </div>
-        <div class="reviews-list">
+        <div class="direktt-reviews-list">
             <?php
             $reviews = get_post_meta( $user_id, 'direktt_reviews', true );
             if ( is_array( $reviews ) && ! empty( $reviews ) ) {
@@ -273,10 +273,13 @@ add_action( 'add_meta_boxes', 'direktt_review_add_meta_box' );
 function render_review_meta_box( $post ) {
     $user_id = $post->ID;
     $user = Direktt_User::get_user_by_post_id( $user_id );
+    if ( ! $user ) {
+        return;
+    }
     $subscription_id = $user['direktt_user_id'];
     ?>
     <div class="direktt-review-meta-box">
-        <div class="header">
+        <div class="direktt-review-header">
             <button class="button direktt-send-review" data-subscription-id="<?php echo esc_attr( $subscription_id ); ?>">
                 <?php echo esc_html__( 'Send review template to user', 'direktt-customer-review' ); ?>
             </button>
@@ -314,7 +317,7 @@ function render_review_meta_box( $post ) {
                 });
             </script>
         </div>
-        <div class="reviews-list">
+        <div class="direktt-reviews-list">
             <?php
             $reviews = get_post_meta( $user_id, 'direktt_reviews', true );
             if ( is_array( $reviews ) && ! empty( $reviews ) ) {
