@@ -327,13 +327,18 @@ function render_review_meta_box( $post ) {
                 $reviews = array_reverse( $reviews );
                 // TODO pitanje da li treba ograniciti broj review-a
                 // $reviews = array_slice( $reviews, 0, 20 );
-                echo '<ul>';
-                foreach ( $reviews as $review ) {
-                    $date = wp_date( 'Y-m-d H:i:s', $review['timestamp'] );
-                    $rating = intval( $review['rating'] );
-                    echo '<li>' . esc_html( $date ) . ' - Rating: ' . esc_html( $rating ) . '</li>';
-                }
-                echo '</ul>';
+                echo '<table class="widefat">';
+					echo '<thead>';
+					echo '<tr><td>Date</td><td>Rating</td></tr>';
+					echo '</thead>';
+					echo '<tbody>';
+					foreach ( $reviews as $review ) {
+						$date = wp_date( 'Y-m-d H:i:s', $review['timestamp'] );
+						$rating = intval( $review['rating'] );
+						echo '<tr><td>' . esc_html( $date ) . '</td><td>' . esc_html( $rating ) . '</td></tr>';
+					}
+					echo '</tbody>';
+                echo '</table>';
             } else {
                 echo '<p>' . esc_html__( 'No reviews found.', 'direktt-customer-review' ) . '</p>';
             }
