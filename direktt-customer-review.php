@@ -330,9 +330,9 @@ function render_review_meta_box( $post ) {
                 $reviews = array_reverse( $reviews );
                 // TODO pitanje da li treba ograniciti broj review-a
                 // $reviews = array_slice( $reviews, 0, 20 );
-                echo '<table class="widefat">';
+                echo '<table class="widefat striped">';
 					echo '<thead>';
-					echo '<tr><td>Date</td><td>Rating</td></tr>';
+					echo '<tr><td>Time</td><td>Rating</td></tr>';
 					echo '</thead>';
 					echo '<tbody>';
 					foreach ( $reviews as $review ) {
