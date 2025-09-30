@@ -355,20 +355,10 @@ function render_review_meta_box( $post ) {
     <?php
 }
 
-function direktt_send_review_messages( $subscription_id ) {
-    $user         = Direktt_User::get_user_by_subscription_id( $subscription_id );
-    $display_name = get_the_title( $user['ID'] );
+function direktt_create_review_buttons(){
 
-    $review_template   = intval( get_option( 'direktt_review_template', 0 ) );
     $review_min_rating = intval( get_option( 'direktt_review_min_rating', 1 ) );
     $review_max_rating = intval( get_option( 'direktt_review_max_rating', 5 ) );
-    $review_threshold  = intval( get_option( 'direktt_review_threshold', 3 ) );
-
-    Direktt_Message::send_message_template(
-        array( $subscription_id ),
-        $review_template,
-        array()
-    );
 
     $msg_obj = array();
 
@@ -381,6 +371,7 @@ function direktt_send_review_messages( $subscription_id ) {
                 'type'    => 'api',
                 'params'  => array(
                     'actionType' => 'submit_review',
+                    'successMessage' => 'Your review has been recorded! Thanks!'
                 ),
                 'retVars' => (object) array(
                     'rating' => "$ctr",
@@ -399,6 +390,23 @@ function direktt_send_review_messages( $subscription_id ) {
             )
         ),
     );
+
+    return $review_message;
+}
+
+function direktt_send_review_messages( $subscription_id ) {
+    $user         = Direktt_User::get_user_by_subscription_id( $subscription_id );
+    $display_name = get_the_title( $user['ID'] );
+
+    $review_template   = intval( get_option( 'direktt_review_template', 0 ) );
+
+    Direktt_Message::send_message_template(
+        array( $subscription_id ),
+        $review_template,
+        array()
+    );
+
+    $review_message = direktt_create_review_buttons();
 
     Direktt_Message::send_message( array( $subscription_id => $review_message ) );
 
@@ -484,6 +492,15 @@ function on_submit_review( $request ) {
         update_post_meta( $user_id, 'direktt_reviews', $reviews );
 
         $data = array();
+
+        $review_message = direktt_create_review_buttons();
+        $new_content = json_decode($review_message['content']);
+        $new_content->disabled = true;
+        $new_content->msgObj[$rating-1]->accent = true;
+
+
+        Direktt_Message::update_message($subscription_id, sanitize_text_field($request['messageId']), json_encode($new_content));
+
         wp_send_json_success( $data, 200 );
     } else {
         wp_send_json_error( new WP_Error( 'missing_parameter', esc_html__( 'Subscription Id or Rating is missing', 'direktt-customer-review' ) ), 400 );
