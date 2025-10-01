@@ -71,6 +71,8 @@ function render_review_settings_page() {
         update_option( 'direktt_review_threshold', intval( $_POST['direktt_review_threshold'] ) );
         update_option( 'direktt_review_under_treshold_template', intval( $_POST['direktt_review_under_threshold_template'] ) );
         update_option( 'direktt_review_over_treshold_template', intval( $_POST['direktt_review_over_threshold_template'] ) );
+        update_option( 'direktt_review_send_to_admin', isset( $_POST['direktt_review_send_to_admin'] ) ? 'yes' : 'no' );
+        update_option( 'direktt_review_admin_template', intval( $_POST['direktt_review_admin_template'] ) );
         $success = true;
     }
 
@@ -81,6 +83,9 @@ function render_review_settings_page() {
     $review_threshold                = intval( get_option( 'direktt_review_threshold', 3 ) );
     $review_under_threshold_template = intval( get_option( 'direktt_review_under_treshold_template', 0 ) );
     $review_over_threshold_template  = intval( get_option( 'direktt_review_over_treshold_template', 0 ) );
+    $send_to_admin                   = intval( get_option( 'direktt_review_send_to_admin', 0 ) );
+    $send_to_admin                   = get_option( 'direktt_review_send_to_admin', 'no' ) === 'yes';
+    $review_admin_template           = intval( get_option( 'direktt_review_admin_template', 0 ) );
 
     // Query for template posts
     $template_args  = array(
@@ -169,6 +174,27 @@ function render_review_settings_page() {
                         </select>
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row"><label for="direktt_review_send_to_admin"><?php echo esc_html__( 'Send to Admin', 'direktt-loyalty-program' ); ?></label></th>
+                    <td>
+                        <input type="checkbox" name="direktt_review_send_to_admin" id="direktt_review_send_to_admin" value="yes" <?php checked( $send_to_admin ); ?> />
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="direktt_review_admin_template"><?php echo esc_html__( 'Admin Template', 'direktt-customer-review' ); ?></label></th>
+                    <td>
+                        <select name="direktt_review_admin_template" id="direktt_review_admin_template">
+                            <option value="0"><?php echo esc_html__( 'Select Template', 'direktt-customer-review' ); ?></option>
+                            <?php foreach ( $template_posts as $post ) : ?>
+                                <option value="<?php echo esc_attr( $post->ID ); ?>" <?php selected( $review_admin_template, $post->ID ); ?>>
+                                    <?php echo esc_html( $post->post_title ); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <p class="description"><?php echo esc_html__( 'This message will be sent to the admin when a review is submitted.', 'direktt-customer-review' ); ?></p>
+                        <p class="description"><?php echo esc_html__( 'You can use placeholders', 'direktt-customer-review' ); ?> <?php echo esc_html( '#display_name#' ); ?> <?php echo esc_html__( 'for display name, and', 'direktt-customer-review' ); ?> <?php echo esc_html( '#subscription_id#' ); ?> <?php echo esc_html__( 'for subscription id.', 'direktt-customer-review' ); ?></p>
+                    </td>
+                </tr>
             </table>
 
             <script>
@@ -236,7 +262,53 @@ function render_review_profile_tool() {
 
     ?>
     <div class="direktt-review-profile-tool">
+        <?php
+        echo Direktt_Public::direktt_render_alert_popup( 'direktt-review-alert', '' );
+        ?>
         <div class="direktt-review-header">
+            <button class="button direktt-send-review" data-subscription-id="<?php echo esc_attr( $subscription_id ); ?>">
+                <?php echo esc_html__( 'Send review template to user', 'direktt-customer-review' ); ?>
+            </button>
+            <?php wp_nonce_field( 'direktt_send_review_template', 'direktt_send_review_template_nonce' ); ?>
+            <script>
+                jQuery(document).ready(function ($) {
+                    $('.direktt-send-review').off('click').on('click', function () {
+                        event.preventDefault();
+                        const subscriptionId = $(this).data('subscription-id');
+                        const data = {
+                            action: 'direktt_send_review_template',
+                            subscriptionId: subscriptionId,
+                            nonce: $('#direktt_send_review_template_nonce').val()
+                        };
+                        $( this ).prop('disabled', true).text('<?php echo esc_js( __( 'Sending...', 'direktt-customer-review' ) ); ?>');
+                        $.ajax({
+                            url: '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ); ?>',
+                            type: 'POST',
+                            data: data,
+                            success: function (response) {
+                                if (response.success) {
+                                    $( '#direktt-review-alert' ).addClass( 'direktt-popup-on' );
+                                    $( '#direktt-review-alert .direktt-popup-text' ).text( response.data.message );
+                                } else {
+                                    $( '#direktt-review-alert' ).addClass( 'direktt-popup-on' );
+                                    $( '#direktt-review-alert .direktt-popup-text' ).text( response.data.error );
+                                }
+                                $( '.direktt-send-review' ).prop('disabled', false).text('<?php echo esc_js( __( 'Send review template to user', 'direktt-customer-review' ) ); ?>');
+                            },
+                            error: function () {
+                                $( '#direktt-review-alert' ).addClass( 'direktt-popup-on' );
+                                $( '#direktt-review-alert .direktt-popup-text' ).text( '<?php echo esc_js( __( 'An error occurred while sending the review template.', 'direktt-customer-review' ) ); ?>' );
+                                $( '.direktt-send-review' ).prop('disabled', false).text('<?php echo esc_js( __( 'Send review template to user', 'direktt-customer-review' ) ); ?>');
+                            }
+                        });
+                    });
+
+                    $( '#direktt-review-alert .direktt-popup-ok' ).on('click', function (event) {
+                        event.preventDefault();
+                        $( '#direktt-review-alert' ).removeClass( 'direktt-popup-on' );
+                    });
+                });
+            </script>
             <h2><?php echo esc_html__( 'Recent Reviews', 'direktt-customer-review' ); ?></h2>
         </div>
         <div class="direktt-reviews-list">
@@ -244,8 +316,6 @@ function render_review_profile_tool() {
             $reviews = get_post_meta( $user_id, 'direktt_reviews', true );
             if ( is_array( $reviews ) && ! empty( $reviews ) ) {
                 $reviews = array_reverse( $reviews );
-                // TODO pitanje da li treba ograniciti broj review-a
-                // $reviews = array_slice( $reviews, 0, 20 );
                 echo '<table class="direktt-review-profile-tool-table">';
 					echo '<thead>';
 						echo '<tr><th>' . esc_html__( 'Time', 'direktt-customer-review' ) . ' </th><th> ' . esc_html__( 'Rating', 'direktt-customer-review' ) . '</th></tr>';
@@ -409,19 +479,6 @@ function direktt_send_review_messages( $subscription_id ) {
     $review_message = direktt_create_review_buttons();
 
     Direktt_Message::send_message( array( $subscription_id => $review_message ) );
-
-    $admin_message = sprintf(
-        esc_html__( 'Review template sent to user %1$s (%2$s)', 'direktt-customer-review' ),
-        esc_html( $display_name ),
-        esc_html( $subscription_id )
-    );
-
-    $push_admin_message = array(
-        'type'    => 'text',
-        'content' => $admin_message,
-    );
-
-    Direktt_Message::send_message_to_admin( $push_admin_message );
 }
 
 function handle_direktt_send_review_template() {
@@ -474,6 +531,21 @@ function on_submit_review( $request ) {
                 array( $subscription_id ),
                 $review_over_threshold_template,
                 array()
+            );
+        }
+
+        $send_to_admin = get_option( 'direktt_review_send_to_admin', 'no' ) === 'yes';
+        $admin_template = intval( get_option( 'direktt_review_admin_template', 0 ) );
+
+        if ( $send_to_admin && $admin_template ) {
+            $display_name = $direktt_user['direktt_display_name'];
+
+            Direktt_Message::send_message_template_to_admin(
+                $admin_template,
+                array(
+                    'subscription_id' => $subscription_id,
+                    'display_name'    => $display_name,
+                )
             );
         }
 
