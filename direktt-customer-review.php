@@ -554,6 +554,8 @@ function on_submit_review( $request ) {
             'rating'    => $rating,
         );
 
+        $review_min_rating = intval( get_option( 'direktt_review_min_rating', 1 ) );
+
         $profile_user = Direktt_User::get_user_by_subscription_id( $subscription_id );
         $user_id      = $profile_user['ID'];
         $reviews      = get_post_meta( $user_id, 'direktt_reviews', true );
@@ -568,7 +570,7 @@ function on_submit_review( $request ) {
         $review_message = direktt_create_review_buttons();
         $new_content = json_decode($review_message['content']);
         $new_content->disabled = true;
-        $new_content->msgObj[$rating-1]->accent = true;
+        $new_content->msgObj[$rating-$review_min_rating]->accent = true;
 
 
         Direktt_Message::update_message($subscription_id, sanitize_text_field($request['messageId']), json_encode($new_content));
