@@ -360,6 +360,7 @@ function render_review_meta_box( $post ) {
     ?>
     <div class="direktt-review-meta-box">
         <div class="direktt-review-header">
+            <p class="notice" id="direktt-send-review-notice" style="display: none;"></p>
             <button class="button direktt-send-review" data-subscription-id="<?php echo esc_attr( $subscription_id ); ?>">
                 <?php echo esc_html__( 'Send review template to user', 'direktt-customer-review' ); ?>
             </button>
@@ -382,14 +383,14 @@ function render_review_meta_box( $post ) {
                             data: data,
                             success: function (response) {
                                 if (response.success) {
-                                    alert(response.data.message);
+                                    $( '#direktt-send-review-notice' ).removeClass('direktt-notice-error').addClass( 'direktt-notice' ).text(response.data.message).show();
                                 } else {
-                                    alert(response.data.error);
+                                    $( '#direktt-send-review-notice' ).addClass('direktt-notice').addClass( 'direktt-notice-error' ).text(response.data.error).show();
                                 }
                                 $( '.direktt-send-review' ).prop('disabled', false).text('<?php echo esc_js( __( 'Send review template to user', 'direktt-customer-review' ) ); ?>');
                             },
                             error: function () {
-                                alert('<?php echo esc_js( __( 'An error occurred while sending the review template.', 'direktt-customer-review' ) ); ?>');
+                                $( '#direktt-send-review-notice' ).addClass('direktt-notice').addClass( 'direktt-notice-error' ).text('<?php echo esc_js( __( 'An error occurred while sending the review template.', 'direktt-customer-review' ) ); ?>').show();
                                 $( '.direktt-send-review' ).prop('disabled', false).text('<?php echo esc_js( __( 'Send review template to user', 'direktt-customer-review' ) ); ?>');
                             }
                         });
@@ -406,7 +407,7 @@ function render_review_meta_box( $post ) {
                 // $reviews = array_slice( $reviews, 0, 20 );
                 echo '<table class="widefat striped">';
 					echo '<thead>';
-					echo '<tr><td>Time</td><td>Rating</td></tr>';
+					echo '<tr><td>' . esc_html__( 'Time', 'direktt-customer-review' ) . ' </td><td> ' . esc_html__( 'Rating', 'direktt-customer-review' ) . '</td></tr>';
 					echo '</thead>';
 					echo '<tbody>';
 				foreach ( $reviews as $review ) {
