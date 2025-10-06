@@ -197,6 +197,10 @@ function render_review_settings_page() {
                 </tr>
             </table>
 
+            <?php
+            echo Direktt_Public::direktt_render_alert_popup( 'direktt-review-settings-alert', '' );
+            ?>
+
             <script>
                 jQuery(document).ready(function ($) {
                     const form = $('form');
@@ -210,19 +214,22 @@ function render_review_settings_page() {
                         const threshold = parseInt(thresholdInput.val(), 10);
                         
                         if (minRating >= maxRating) {
-                            alert('Minimum Rating must be less than Maximum Rating.');
+                            $( '#direktt-review-settings-alert' ).addClass( 'direktt-popup-on' );
+                            $( '#direktt-review-settings-alert .direktt-popup-text' ).text( '<?php echo esc_js( __( 'Minimum Rating must be less than Maximum Rating.', 'direktt-customer-review' ) ); ?>' );
                             event.preventDefault();
                             return;
                         }
 
-                        if ((maxRating - minRating) > 5) {
-                            alert('The difference between Minimum and Maximum Rating cannot exceed 5.');
-                            event.preventDefault();
-                            return;
-                        }
+                        // if ((maxRating - minRating) > 5) {
+                        //     $( '#direktt-review-settings-alert' ).addClass( 'direktt-popup-on' );
+                        //     $( '#direktt-review-settings-alert .direktt-popup-text' ).text( '<?php /* echo esc_js( __( 'The difference between Minimum and Maximum Rating cannot exceed 5.', 'direktt-customer-review' ) ); */ ?>' );
+                        //     event.preventDefault();
+                        //     return;
+                        // }
 
                         if (threshold < minRating || threshold > maxRating) {
-                            alert('Threshold Rating must be between Minimum and Maximum Rating.');
+                            $( '#direktt-review-settings-alert' ).addClass( 'direktt-popup-on' );
+                            $( '#direktt-review-settings-alert .direktt-popup-text' ).text( '<?php echo esc_js( __( 'Threshold Rating must be between Minimum and Maximum Rating.', 'direktt-customer-review' ) ); ?>' );
                             event.preventDefault();
                             return;
                         }
