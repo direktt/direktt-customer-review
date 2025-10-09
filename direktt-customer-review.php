@@ -278,7 +278,7 @@ function render_review_profile_tool() {
         echo Direktt_Public::direktt_render_alert_popup( 'direktt-review-alert', '' );
         ?>
         <div class="direktt-review-header">
-            <button class="button direktt-send-review" data-subscription-id="<?php echo esc_attr( $subscription_id ); ?>">
+            <button class="button button-large button-primary direktt-send-review" data-subscription-id="<?php echo esc_attr( $subscription_id ); ?>">
                 <?php echo esc_html__( 'Send review template to user', 'direktt-customer-review' ); ?>
             </button>
             <?php wp_nonce_field( 'direktt_send_review_template', 'direktt_send_review_template_nonce' ); ?>
