@@ -234,6 +234,11 @@ function render_review_settings_page() {
                             return;
                         }
                     });
+
+                    $( '#direktt-review-settings-alert .direktt-popup-ok' ).off('click').on('click', function (event) {
+                        event.preventDefault();
+                        $( '#direktt-review-settings-alert' ).removeClass( 'direktt-popup-on' );
+                    });
                 });
             </script>
 
@@ -310,7 +315,7 @@ function render_review_profile_tool() {
                         });
                     });
 
-                    $( '#direktt-review-alert .direktt-popup-ok' ).on('click', function (event) {
+                    $( '#direktt-review-alert .direktt-popup-ok' ).off('click').on('click', function (event) {
                         event.preventDefault();
                         $( '#direktt-review-alert' ).removeClass( 'direktt-popup-on' );
                     });
@@ -367,7 +372,7 @@ function render_review_meta_box( $post ) {
     ?>
     <div class="direktt-review-meta-box">
         <div class="direktt-review-header">
-            <p class="notice" id="direktt-send-review-notice" style="display: none;"></p>
+            <div id="direktt-send-review-notice" style="display: none;"><p></p></div>
             <button class="button direktt-send-review" data-subscription-id="<?php echo esc_attr( $subscription_id ); ?>">
                 <?php echo esc_html__( 'Send review template to user', 'direktt-customer-review' ); ?>
             </button>
@@ -390,14 +395,20 @@ function render_review_meta_box( $post ) {
                             data: data,
                             success: function (response) {
                                 if (response.success) {
-                                    $( '#direktt-send-review-notice' ).removeClass('direktt-notice-error').addClass( 'direktt-notice' ).text(response.data.message).show();
+                                    $( '#direktt-send-review-notice' ).removeClass( 'error' ).addClass( 'notice' ).addClass( 'notice-success' );
+                                    $( '#direktt-send-review-notice p' ).text(response.data.message);
+                                    $( '#direktt-send-review-notice' ).show();
                                 } else {
-                                    $( '#direktt-send-review-notice' ).addClass('direktt-notice').addClass( 'direktt-notice-error' ).text(response.data.error).show();
+                                    $( '#direktt-send-review-notice' ).addClass( 'error' ).addClass( 'notice' ).removeClass( 'notice-success' );
+                                    $( '#direktt-send-review-notice p' ).text(response.data.error);
+                                    $( '#direktt-send-review-notice' ).show();
                                 }
                                 $( '.direktt-send-review' ).prop('disabled', false).text('<?php echo esc_js( __( 'Send review template to user', 'direktt-customer-review' ) ); ?>');
                             },
                             error: function () {
-                                $( '#direktt-send-review-notice' ).addClass('direktt-notice').addClass( 'direktt-notice-error' ).text('<?php echo esc_js( __( 'An error occurred while sending the review template.', 'direktt-customer-review' ) ); ?>').show();
+                                $( '#direktt-send-review-notice' ).addClass( 'error' ).addClass( 'notice' ).removeClass( 'notice-success' );
+                                $( '#direktt-send-review-notice p' ).text('<?php echo esc_js( __( 'An error occurred while sending the review template.', 'direktt-customer-review' ) ); ?>');
+                                $( '#direktt-send-review-notice' ).show();
                                 $( '.direktt-send-review' ).prop('disabled', false).text('<?php echo esc_js( __( 'Send review template to user', 'direktt-customer-review' ) ); ?>');
                             }
                         });
