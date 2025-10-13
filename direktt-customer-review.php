@@ -331,14 +331,14 @@ function render_review_profile_tool() {
                     });
                 });
             </script>
-            <h2><?php echo esc_html__( 'Recent Reviews', 'direktt-customer-review' ); ?></h2>
         </div>
+        <h2><?php echo esc_html__( 'Recent Reviews', 'direktt-customer-review' ); ?></h2>
         <div class="direktt-reviews-list">
             <?php
             $reviews = get_post_meta( $user_id, 'direktt_reviews', true );
             if ( is_array( $reviews ) && ! empty( $reviews ) ) {
                 $reviews = array_reverse( $reviews );
-                echo '<table class="direktt-review-profile-tool-table">';
+                echo '<table class="direktt-table direktt-table-last-column-align-right direktt-review-profile-tool-table">';
 					echo '<thead>';
 						echo '<tr><th>' . esc_html__( 'Time', 'direktt-customer-review' ) . ' </th><th> ' . esc_html__( 'Rating', 'direktt-customer-review' ) . '</th></tr>';
 					echo '</thead>';
