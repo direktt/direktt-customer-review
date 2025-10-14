@@ -333,28 +333,26 @@ function render_review_profile_tool() {
             </script>
         </div>
         <h2><?php echo esc_html__( 'Recent Reviews', 'direktt-customer-review' ); ?></h2>
-        <div class="direktt-reviews-list">
-            <?php
-            $reviews = get_post_meta( $user_id, 'direktt_reviews', true );
-            if ( is_array( $reviews ) && ! empty( $reviews ) ) {
-                $reviews = array_reverse( $reviews );
-                echo '<table class="direktt-table direktt-table-last-column-align-right direktt-review-profile-tool-table">';
-					echo '<thead>';
-						echo '<tr><th>' . esc_html__( 'Time', 'direktt-customer-review' ) . ' </th><th> ' . esc_html__( 'Rating', 'direktt-customer-review' ) . '</th></tr>';
-					echo '</thead>';
-					echo '<tbody>';
-				foreach ( $reviews as $review ) {
-					$date   = human_time_diff( $review['timestamp'] ) . ' ago';
-					$rating = intval( $review['rating'] );
-					echo '<tr><td>' . esc_html( $date ) . ' </td><td> ' . esc_html( $rating ) . '</td></tr>';
-				}
-					echo '</tbody>';
-                echo '</table>';
-            } else {
-                echo '<p>' . esc_html__( 'No reviews found.', 'direktt-customer-review' ) . '</p>';
-            }
-            ?>
-        </div>
+		<?php
+		$reviews = get_post_meta( $user_id, 'direktt_reviews', true );
+		if ( is_array( $reviews ) && ! empty( $reviews ) ) {
+			$reviews = array_reverse( $reviews );
+			echo '<table class="direktt-table direktt-table-last-column-align-right direktt-review-profile-tool-table">';
+				echo '<thead>';
+					echo '<tr><th>' . esc_html__( 'Time', 'direktt-customer-review' ) . ' </th><th> ' . esc_html__( 'Rating', 'direktt-customer-review' ) . '</th></tr>';
+				echo '</thead>';
+				echo '<tbody>';
+			foreach ( $reviews as $review ) {
+				$date   = human_time_diff( $review['timestamp'] ) . ' ago';
+				$rating = intval( $review['rating'] );
+				echo '<tr><td>' . esc_html( $date ) . ' </td><td> ' . esc_html( $rating ) . '</td></tr>';
+			}
+				echo '</tbody>';
+			echo '</table>';
+		} else {
+			echo '<p>' . esc_html__( 'No reviews found.', 'direktt-customer-review' ) . '</p>';
+		}
+		?>
     </div>
     <?php
 }
@@ -426,30 +424,28 @@ function render_review_meta_box( $post ) {
                 });
             </script>
         </div>
-        <div class="direktt-reviews-list">
-            <?php
-            $reviews = get_post_meta( $user_id, 'direktt_reviews', true );
-            if ( is_array( $reviews ) && ! empty( $reviews ) ) {
-                $reviews = array_reverse( $reviews );
-                // TODO pitanje da li treba ograniciti broj review-a
-                // $reviews = array_slice( $reviews, 0, 20 );
-                echo '<table class="widefat striped">';
-					echo '<thead>';
-					echo '<tr><td>' . esc_html__( 'Time', 'direktt-customer-review' ) . ' </td><td> ' . esc_html__( 'Rating', 'direktt-customer-review' ) . '</td></tr>';
-					echo '</thead>';
-					echo '<tbody>';
-				foreach ( $reviews as $review ) {
-					$date   = wp_date( 'Y-m-d H:i:s', $review['timestamp'] );
-					$rating = intval( $review['rating'] );
-					echo '<tr><td>' . esc_html( $date ) . '</td><td>' . esc_html( $rating ) . '</td></tr>';
-				}
-					echo '</tbody>';
-                echo '</table>';
-            } else {
-                echo '<p>' . esc_html__( 'No reviews found.', 'direktt-customer-review' ) . '</p>';
-            }
-            ?>
-        </div>
+		<?php
+		$reviews = get_post_meta( $user_id, 'direktt_reviews', true );
+		if ( is_array( $reviews ) && ! empty( $reviews ) ) {
+			$reviews = array_reverse( $reviews );
+			// TODO pitanje da li treba ograniciti broj review-a
+			// $reviews = array_slice( $reviews, 0, 20 );
+			echo '<table class="widefat striped">';
+				echo '<thead>';
+				echo '<tr><td>' . esc_html__( 'Time', 'direktt-customer-review' ) . ' </td><td> ' . esc_html__( 'Rating', 'direktt-customer-review' ) . '</td></tr>';
+				echo '</thead>';
+				echo '<tbody>';
+			foreach ( $reviews as $review ) {
+				$date   = wp_date( 'Y-m-d H:i:s', $review['timestamp'] );
+				$rating = intval( $review['rating'] );
+				echo '<tr><td>' . esc_html( $date ) . '</td><td>' . esc_html( $rating ) . '</td></tr>';
+			}
+				echo '</tbody>';
+			echo '</table>';
+		} else {
+			echo '<p>' . esc_html__( 'No reviews found.', 'direktt-customer-review' ) . '</p>';
+		}
+		?>
     </div>
     <?php
 }
