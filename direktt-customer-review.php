@@ -30,7 +30,7 @@ function direktt_customer_review_activation_check() {
         deactivate_plugins(plugin_basename(__FILE__));
 
         // Prevent the “Plugin activated.” notice
-        if (isset($_GET['activate'])) {
+        if (isset($_GET['activate'])) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Justification: not a form processing, just removing a query var.
             unset($_GET['activate']);
         }
 
@@ -73,16 +73,16 @@ function render_review_settings_page() {
     $success = false;
 
     // Handle form submission
-    if ( $_SERVER['REQUEST_METHOD'] === 'POST' && isset( $_POST['direktt_admin_review_nonce'] ) && wp_verify_nonce( $_POST['direktt_admin_review_nonce'], 'direktt_admin_review_save' ) ) {
+    if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] === 'POST' && isset( $_POST['direktt_admin_review_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['direktt_admin_review_nonce'] ) ), 'direktt_admin_review_save' ) ) {
         // update options based on form submission
-        update_option( 'direktt_review_template', intval( $_POST['direktt_review_template'] ) );
-        update_option( 'direktt_review_min_rating', intval( $_POST['direktt_review_min_rating'] ) );
-        update_option( 'direktt_review_max_rating', intval( $_POST['direktt_review_max_rating'] ) );
-        update_option( 'direktt_review_threshold', intval( $_POST['direktt_review_threshold'] ) );
-        update_option( 'direktt_review_under_treshold_template', intval( $_POST['direktt_review_under_threshold_template'] ) );
-        update_option( 'direktt_review_over_treshold_template', intval( $_POST['direktt_review_over_threshold_template'] ) );
+        update_option( 'direktt_review_template', isset( $_POST['direktt_review_template'] ) ? intval( $_POST['direktt_review_template'] ) : 0 );
+        update_option( 'direktt_review_min_rating', isset( $_POST['direktt_review_min_rating'] ) ? intval( $_POST['direktt_review_min_rating'] ) : 0 );
+        update_option( 'direktt_review_max_rating', isset( $_POST['direktt_review_max_rating'] ) ? intval( $_POST['direktt_review_max_rating'] ) : 0 );
+        update_option( 'direktt_review_threshold', isset( $_POST['direktt_review_threshold'] ) ? intval( $_POST['direktt_review_threshold'] ) : 0 );
+        update_option( 'direktt_review_under_treshold_template', isset( $_POST['direktt_review_under_threshold_template'] ) ? intval( $_POST['direktt_review_under_threshold_template'] ) : 0 );
+        update_option( 'direktt_review_over_treshold_template', isset( $_POST['direktt_review_over_threshold_template'] ) ? intval( $_POST['direktt_review_over_threshold_template'] ) : 0 );
         update_option( 'direktt_review_send_to_admin', isset( $_POST['direktt_review_send_to_admin'] ) ? 'yes' : 'no' );
-        update_option( 'direktt_review_admin_template', intval( $_POST['direktt_review_admin_template'] ) );
+        update_option( 'direktt_review_admin_template', isset( $_POST['direktt_review_admin_template'] ) ? intval( $_POST['direktt_review_admin_template'] ) : 0 );
         $success = true;
     }
 
@@ -104,7 +104,7 @@ function render_review_settings_page() {
         'posts_per_page' => -1,
         'orderby'        => 'title',
         'order'          => 'ASC',
-        'meta_query'     => array(
+        'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- - Justification: bounded, cached, selective query on small dataset
             array(
                 'key'     => 'direkttMTType',
                 'value'   => array( 'all', 'none' ),
@@ -185,7 +185,7 @@ function render_review_settings_page() {
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="direktt_review_send_to_admin"><?php echo esc_html__( 'Send to Admin', 'direktt-loyalty-program' ); ?></label></th>
+                    <th scope="row"><label for="direktt_review_send_to_admin"><?php echo esc_html__( 'Send to Admin', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <input type="checkbox" name="direktt_review_send_to_admin" id="direktt_review_send_to_admin" value="yes" <?php checked( $send_to_admin ); ?> />
                     </td>
@@ -208,7 +208,8 @@ function render_review_settings_page() {
             </table>
 
             <?php
-            echo Direktt_Public::direktt_render_alert_popup( 'direktt-review-settings-alert', '' );
+            $allowed_html = wp_kses_allowed_html( 'post' );
+            echo wp_kses( Direktt_Public::direktt_render_alert_popup( 'direktt-review-settings-alert', '' ), $allowed_html );
             ?>
 
             <script>
@@ -274,10 +275,10 @@ function setup_review_profile_tools() {
 }
 
 function render_review_profile_tool() {
-    $subscription_id = isset( $_GET['subscriptionId'] ) ? sanitize_text_field( wp_unslash( $_GET['subscriptionId'] ) ) : false;
+    $subscription_id = isset( $_GET['subscriptionId'] ) ? sanitize_text_field( wp_unslash( $_GET['subscriptionId'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Justification: not a form processing, used for content rendering.
     $profile_user    = Direktt_User::get_user_by_subscription_id( $subscription_id );
     if ( ! $profile_user ) {
-        echo '<div class="notice notice-error"><p>' . esc_html__( 'User not found.', 'direktt' ) . '</p></div>';
+        echo '<div class="notice notice-error"><p>' . esc_html__( 'User not found.', 'direktt-customer-review' ) . '</p></div>';
         return;
     }
     $user_id = $profile_user['ID'];
@@ -285,7 +286,8 @@ function render_review_profile_tool() {
     ?>
     <div class="direktt-review-profile-tool">
         <?php
-        echo Direktt_Public::direktt_render_alert_popup( 'direktt-review-alert', '' );
+        $allowed_html = wp_kses_allowed_html( 'post' );
+        echo wp_kses( Direktt_Public::direktt_render_alert_popup( 'direktt-review-alert', '' ), $allowed_html );
         ?>
         <div class="direktt-review-header">
             <button class="button button-large button-primary direktt-send-review" data-subscription-id="<?php echo esc_attr( $subscription_id ); ?>">
@@ -511,11 +513,11 @@ function direktt_send_review_messages( $subscription_id ) {
 }
 
 function handle_direktt_send_review_template() {
-    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'direktt_send_review_template' ) ) {
-        wp_send_json_error( array( 'error' => esc_html__( 'Invalid nonce.', 'direktt-customer-review' ) ) );
+    if ( ! isset( $_POST['nonce'], $_POST['subscriptionId'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'direktt_send_review_template' ) ) {
+        wp_send_json_error( array( 'error' => esc_html__( 'Invalid request.', 'direktt-customer-review' ) ) );
     }
 
-    $subscription_id = sanitize_text_field( $_POST['subscriptionId'] );
+    $subscription_id = sanitize_text_field( wp_unslash( $_POST['subscriptionId'] ) );
 
     direktt_send_review_messages( $subscription_id );
 
