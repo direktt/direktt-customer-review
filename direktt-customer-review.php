@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Direktt Customer Review
  * Description: Direktt Customer Review Direktt Plugin
- * Version: 1.0.3
+ * Version: 1.0.2
  * Author: Direktt
  * Author URI: https://direktt.com/
  * License: GPL2
