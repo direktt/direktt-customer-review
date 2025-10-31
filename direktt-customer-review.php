@@ -151,7 +151,7 @@ function render_review_settings_page() {
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <p class="description">!!!TODO!!!</p><!-- TODO -->
+                        <p class="description"><?php echo esc_html__( 'This message template will be followed by the interactive message with the rating buttons', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
                 <tr>
@@ -246,13 +246,6 @@ function render_review_settings_page() {
                             event.preventDefault();
                             return;
                         }
-
-                        // if ((maxRating - minRating) > 5) {
-                        //     $( '#direktt-review-settings-alert' ).addClass( 'direktt-popup-on' );
-                        //     $( '#direktt-review-settings-alert .direktt-popup-text' ).text( '<?php /* echo esc_js( __( 'The difference between Minimum and Maximum Rating cannot exceed 5.', 'direktt-customer-review' ) ); */ ?>' );
-                        //     event.preventDefault();
-                        //     return;
-                        // }
 
                         if (threshold < minRating || threshold > maxRating) {
                             $( '#direktt-review-settings-alert' ).addClass( 'direktt-popup-on' );
