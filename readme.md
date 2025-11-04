@@ -24,36 +24,28 @@ A powerful WordPress plugin for prompting users to give you feedback on service,
 
 - Find **Direktt > Settings > Customer Review Settings** in your WordPress admin menu.
 - Configure:
-    - Choose the message template which will be sent to subscriber when Customer Review is prompted.
+    - Choose the notification which will be sent to subscriber when Customer Review is prompted.
     - Set up minimum, maximum and threshold rating.
-    - Choose the message templates which will be sent to subscriber when review is submitted by them.
+    - Choose the notifications which will be sent to subscriber when review is submitted by them.
     - Do you want Direktt Admin to be notified when review is submitted?
-    - Choose the message template which will be sent to Direktt Admin when review is submitted.
+    - Choose the notification which will be sent to Direktt Admin when review is submitted.
 
-### Points Management
+### Review Management
 
 - Access a user profile via the Direktt User profile or wp-admin.
-- Add or remove points using configured rules.
-- Reset user points to initial value when users reedem Awards.
-- All actions are logged in the user’s **transaction history**.
-
-### Shortcode (Front End)
-
-Show the loyalty points account and recent transaction history to a Direktt user:
-
-```[direktt_loyalty_program_service]```
+- Send review template to user.
+- All actions are logged in the user’s **Recent Reviews**.
 
 ## Notification Templates
 
 Direktt Message templates support following dynamic placeholders:
 
-- `#change#` — number of points added/removed
-- `#points#` — new points balance
-- Other admin templates: `#display_name#`, `#subscription_id#`
+- `#display_name#` — display name of the new subsriber (only for admin message)
+- `#subscriptionId#` — subscription id of the new subscriber (only for admin message)
 
-## Transaction Logs
+## Recent Reviews
 
-For every points change or reset, an entry is made with admin name, change amount, balance, and timestamp.
+For every review, an entry is made with rating and timestamp.
 
 ---
 
