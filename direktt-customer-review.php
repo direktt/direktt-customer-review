@@ -477,7 +477,7 @@ function direktt_create_review_buttons(){
                 'type'    => 'api',
                 'params'  => array(
                     'actionType' => 'submit_review',
-                    'successMessage' => 'Your review has been recorded! Thanks!'
+                    'successMessage' => esc_html__( 'Your review has been recorded! Thanks!', 'direktt-customer-review' ),
                 ),
                 'retVars' => (object) array(
                     'rating' => "$ctr",
