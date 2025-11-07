@@ -139,7 +139,7 @@ function render_review_settings_page() {
         <form method="post" action="">
             <?php wp_nonce_field( 'direktt_admin_review_save', 'direktt_admin_review_nonce' ); ?>
 
-            <table class="form-table">
+            <table class="form-table direktt-customer-review-table">
                 <tr>
                     <th scope="row"><label for="direktt_review_template"><?php echo esc_html__( 'Review Message Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
@@ -206,7 +206,7 @@ function render_review_settings_page() {
                         <input type="checkbox" name="direktt_review_send_to_admin" id="direktt_review_send_to_admin" value="yes" <?php checked( $send_to_admin ); ?> />
                     </td>
                 </tr>
-                <tr class="direktt-settings-mt-row">
+                <tr id="direktt-customer-review-settings-mt-admin-row">
                     <th scope="row"><label for="direktt_review_admin_template"><?php echo esc_html__( 'Admin Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <select name="direktt_review_admin_template" id="direktt_review_admin_template">
@@ -225,8 +225,8 @@ function render_review_settings_page() {
             </table>
 
             <?php
-            $allowed_html = wp_kses_allowed_html( 'post' );
-            echo wp_kses( Direktt_Public::direktt_render_alert_popup( 'direktt-review-settings-alert', '' ), $allowed_html );
+            // $allowed_html = wp_kses_allowed_html( 'post' );
+            // echo wp_kses( Direktt_Public::direktt_render_alert_popup( 'direktt-review-settings-alert', '' ), $allowed_html );
             ?>
 
             <script>
