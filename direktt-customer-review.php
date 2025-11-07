@@ -206,7 +206,7 @@ function render_review_settings_page() {
                         <input type="checkbox" name="direktt_review_send_to_admin" id="direktt_review_send_to_admin" value="yes" <?php checked( $send_to_admin ); ?> />
                     </td>
                 </tr>
-                <tr>
+                <tr class="direktt-settings-mt-row">
                     <th scope="row"><label for="direktt_review_admin_template"><?php echo esc_html__( 'Admin Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <select name="direktt_review_admin_template" id="direktt_review_admin_template">
@@ -218,7 +218,8 @@ function render_review_settings_page() {
                             <?php endforeach; ?>
                         </select>
                         <p class="description"><?php echo esc_html__( 'This message will be sent to the admin when a review is submitted.', 'direktt-customer-review' ); ?></p>
-                        <p class="description"><?php echo esc_html__( 'You can use placeholders', 'direktt-customer-review' ); ?> <?php echo esc_html( '#display_name#' ); ?> <?php echo esc_html__( 'for display name, and', 'direktt-customer-review' ); ?> <?php echo esc_html( '#subscription_id#' ); ?> <?php echo esc_html__( 'for subscription id.', 'direktt-customer-review' ); ?></p>
+                        <p class="description"><?php echo esc_html__( 'You can use placeholders', 'direktt-customer-review' ); ?> <?php echo esc_html( '#display_name#' ); ?> <?php echo esc_html__( 'for display name, and', 'direktt-customer-review' ); ?> <?php echo esc_html( '#subscription_id#' ); ?> <?php echo esc_html__( 'for subscription id', 'direktt-customer-review' ); ?></p>
+                        <p class="description"><?php echo esc_html__( 'and', 'direktt-customer-review' ); ?> <?php echo esc_html( '#rating#' ); ?> <?php echo esc_html__( 'for rating that selected.', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
             </table>
@@ -581,6 +582,7 @@ function on_submit_review( $request ) {
                 array(
                     'subscription_id' => $subscription_id,
                     'display_name'    => $display_name,
+                    'rating'          => $rating,
                 )
             );
         }
