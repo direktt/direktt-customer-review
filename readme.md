@@ -40,7 +40,7 @@ https://github.com/direktt/direktt-customer-review/wiki
 ### Workflow
 
 - **User receives interactive review message**
-    - After scanning the Review action QR code
+    - Upon scanning the Review action QR code
     - OR initiated manually by channel admin in Direktt mobile app
 - **User leaves the rating**
     - User taps the respective rating button in chat interface    
