@@ -57,16 +57,18 @@ Direktt Message templates support following dynamic placeholders:
 - `#subscriptionId#` — subscription id of the subscriber **(only for admin notifications)**
 - `#rating#` — rating left by the subscriber **(only for admin notifications)**
 
-## Recent Reviews
+## Review History
 
-For every review, an entry is made with rating and timestamp.
+For every review, an entry is made with rating and timestamp. Review history is available within user profile in Direktt mobile app.
 
 ---
 
 ## Updating
 
-The plugin supports updating directly from this GitHub repository.
+The plugin supports updates directly from WordPress admin console.  
 
+You can find all plugin releases in the Releases section of this repository:  
+https://github.com/direktt/direktt-customer-review/releases.
 ---
 
 ## License
@@ -77,4 +79,9 @@ GPL-2.0-or-later
 
 ## Support
 
-Contact [Direktt](https://direktt.com/) for questions, issues, or contributions.
+Please use Issues section of this repository for any issue you might have:  
+https://github.com/direktt/direktt-customer-review/issues.  
+
+Join Direktt Community on Discord - [Direktt Discord Server](https://discord.gg/xaFWtbpkWp)  
+
+Contact [Direktt](https://direktt.com/) for general questions, issues, or contributions.
