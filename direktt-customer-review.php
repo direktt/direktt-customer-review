@@ -139,6 +139,7 @@ function render_review_settings_page() {
         <form method="post" action="">
             <?php wp_nonce_field( 'direktt_admin_review_save', 'direktt_admin_review_nonce' ); ?>
 
+            <h2 class="title"><?php echo esc_html__( 'Review Message', 'direktt-customer-review' ); ?></h2>
             <table class="form-table direktt-customer-review-table">
                 <tr>
                     <th scope="row"><label for="direktt_review_template"><?php echo esc_html__( 'Message Template', 'direktt-customer-review' ); ?></label></th>
