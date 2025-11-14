@@ -45,7 +45,7 @@ https://github.com/direktt/direktt-customer-review/wiki
 - **User leaves the rating**
     - User taps the respective rating button in chat interface    
 - **User receives feedback message**.
-    - Based on the rating, the user receives respective message. If the rating is above the treshold, user can be invited to submit the review on Google Reviews. If the rating is below the treshold, user can be asked to provide additional details
+    - Based on the rating, the user receives respective message. If the rating is above the treshold, user can be invited to submit the review on e.g. Google Reviews. If the rating is below the treshold, user can be asked to provide additional details
 - **If configured, channel admin receives notification and can immediately initiate the chat with the user**
 - All user's previous ratings are available in the **user profile** within Direktt mobile app.
 
