@@ -139,9 +139,10 @@ function render_review_settings_page() {
         <form method="post" action="">
             <?php wp_nonce_field( 'direktt_admin_review_save', 'direktt_admin_review_nonce' ); ?>
 
+            <h2 class="title"><?php echo esc_html__( 'Review Message', 'direktt-customer-review' ); ?></h2>
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="direktt_review_template"><?php echo esc_html__( 'Review Message Template', 'direktt-customer-review' ); ?></label></th>
+                    <th scope="row"><label for="direktt_review_template"><?php echo esc_html__( 'Message Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <select name="direktt_review_template" id="direktt_review_template">
                             <option value="0"><?php echo esc_html__( 'Select Template', 'direktt-customer-review' ); ?></option>
@@ -155,23 +156,27 @@ function render_review_settings_page() {
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="direktt_review_min_rating"><?php echo esc_html__( 'Minimum Rating', 'direktt-customer-review' ); ?></label></th>
+                    <th scope="row"><?php echo esc_html__( 'Rating', 'direktt-customer-review' ); ?></th>
                     <td>
-                        <input type="number" name="direktt_review_min_rating" id="direktt_review_min_rating" value="<?php echo esc_attr( $review_min_rating ); ?>" min="0" />
+                        <fieldset>
+                            <legend class="screen-reader-text"><span><?php echo esc_html__( 'Rating', 'direktt-customer-review' ); ?></span></legend>
+                            <label for="direktt_review_min_rating"><?php echo esc_html__( 'Minimum', 'direktt-customer-review' ); ?></label>
+                            <input type="number" name="direktt_review_min_rating" id="direktt_review_min_rating" value="<?php echo esc_attr( $review_min_rating ); ?>" min="0" class="small text"/>
+                            <br>
+                            <label for="direktt_review_max_rating"><?php echo esc_html__( 'Maximum', 'direktt-customer-review' ); ?></label>
+                            <input type="number" name="direktt_review_max_rating" id="direktt_review_max_rating" value="<?php echo esc_attr( $review_max_rating ); ?>" min="0" class="small text"/>
+                        </fieldset>
+                        <p class="description"><?php echo esc_html__( 'Define the rating scale for the customer reviews.', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
-                <tr>
-                    <th scope="row"><label for="direktt_review_max_rating"><?php echo esc_html__( 'Maximum Rating', 'direktt-customer-review' ); ?></label></th>
-                    <td>
-                        <input type="number" name="direktt_review_max_rating" id="direktt_review_max_rating" value="<?php echo esc_attr( $review_max_rating ); ?>" min="0" />
-                    </td>
-                </tr>
+            </table>
+            <h2 class="title"><?php echo esc_html__( 'Review Handling', 'direktt-customer-review' ); ?></h2>
+            <table class="form-table">
                 <tr>
                     <th scope="row"><label for="direktt_review_threshold"><?php echo esc_html__( 'Threshold Rating', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <input type="number" name="direktt_review_threshold" id="direktt_review_threshold" value="<?php echo esc_attr( $review_threshold ); ?>" min="0" />
-                        <p class="description"><?php echo esc_html__( 'If rating is below this threshold, the under threshold template will be used.', 'direktt-customer-review' ); ?></p>
-                        <p class="description"><?php echo esc_html__( 'If rating is above this threshold, the over threshold template will be used.', 'direktt-customer-review' ); ?></p>
+                        <p class="description"><?php echo esc_html__( 'Define the threshold rating to differentiate between positive and negative reviews.', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
                 <tr>
@@ -185,6 +190,7 @@ function render_review_settings_page() {
                                 </option>
                             <?php endforeach; ?>
                         </select>
+                        <p class="description"><?php echo esc_html__( 'If rating is below this threshold, the under threshold template will be used.', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
                 <tr>
@@ -198,16 +204,21 @@ function render_review_settings_page() {
                                 </option>
                             <?php endforeach; ?>
                         </select>
+                        <p class="description"><?php echo esc_html__( 'If rating is above this threshold, the over threshold template will be used.', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
+            </table>
+            <h3><?php echo esc_html__( 'Send Message to Admin', 'direktt-customer-review' ); ?></h3>
+            <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="direktt_review_send_to_admin"><?php echo esc_html__( 'Send to Admin', 'direktt-customer-review' ); ?></label></th>
+                    <th scope="row"><label for="direktt_review_send_to_admin"><?php echo esc_html__( 'Enable', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <input type="checkbox" name="direktt_review_send_to_admin" id="direktt_review_send_to_admin" value="yes" <?php checked( $send_to_admin ); ?> />
+                        <label for="direktt_review_send_to_admin" class="description"><?php echo esc_html__( 'When enabled, a notification will be sent to the admin when a review is submitted.', 'direktt-customer-review' ); ?></label>
                     </td>
                 </tr>
-                <tr>
-                    <th scope="row"><label for="direktt_review_admin_template"><?php echo esc_html__( 'Admin Template', 'direktt-customer-review' ); ?></label></th>
+                <tr id="direktt-customer-review-settings-mt-admin-row">
+                    <th scope="row"><label for="direktt_review_admin_template"><?php echo esc_html__( 'Message Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <select name="direktt_review_admin_template" id="direktt_review_admin_template">
                             <option value="0"><?php echo esc_html__( 'Select Template', 'direktt-customer-review' ); ?></option>
@@ -218,7 +229,10 @@ function render_review_settings_page() {
                             <?php endforeach; ?>
                         </select>
                         <p class="description"><?php echo esc_html__( 'This message will be sent to the admin when a review is submitted.', 'direktt-customer-review' ); ?></p>
-                        <p class="description"><?php echo esc_html__( 'You can use placeholders', 'direktt-customer-review' ); ?> <?php echo esc_html( '#display_name#' ); ?> <?php echo esc_html__( 'for display name, and', 'direktt-customer-review' ); ?> <?php echo esc_html( '#subscription_id#' ); ?> <?php echo esc_html__( 'for subscription id.', 'direktt-customer-review' ); ?></p>
+                        <p class="description"><?php echo esc_html__( 'You can use following dynamic placeholders in this template:', 'direktt-customer-review' ); ?></p>
+						<p class="description"><code><?php echo esc_html( '#display_name#' ); ?></code><?php echo esc_html__( ' - user\'s display name.', 'direktt-customer-review' ); ?></p>
+						<p class="description"><code><?php echo esc_html( '#subscription_id#' ); ?></code><?php echo esc_html__( ' - user\'s subscription ID.', 'direktt-customer-review' ); ?></p>
+					
                     </td>
                 </tr>
             </table>
