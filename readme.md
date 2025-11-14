@@ -1,6 +1,8 @@
 # Direktt Customer Review
 
-A powerful WordPress plugin for prompting users to give you feedback on service, tightly integrated with the [Direktt WordPress Plugin](https://direktt.com/).
+Direktt Customer Review is a WordPress plugin that makes it easy to invite, collect, and manage customer feedback directly from the Direktt chat interface. Send interactive review requests, customize follow-up messages based on the rating received, and track all review history within each user’s profile—ensuring you always stay connected to client sentiment and opportunities to shine.
+
+It is tightly integrated with the [Direktt WordPress Plugin](https://direktt.com/).
 
 With Customer Review extension you can:
 
