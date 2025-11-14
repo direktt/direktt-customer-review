@@ -32,11 +32,10 @@ https://github.com/direktt/direktt-customer-review/wiki
 
 - Find **Direktt > Settings > Customer Review Settings** in your WordPress admin menu.
 - Configure:
-    - Choose the notification which will be sent to subscriber when Customer Review is prompted.
-    - Set up minimum, maximum and threshold rating.
-    - Choose the notifications which will be sent to subscriber when review is submitted by them.
-    - Do you want Direktt Admin to be notified when review is submitted?
-    - Choose the notification which will be sent to Direktt Admin when review is submitted.
+    - Message which will be sent to subscriber when Customer Review workflow is triggered.
+    - Minimum, maximum and threshold rating. 
+    - Notification sent to the subscriber when review is submitted based on the rating and treshold (you can send different post review messages for positive and negative reviews)
+    - Notification for channel admin on review submission
 
 ### Review Management
 
