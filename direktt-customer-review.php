@@ -140,7 +140,7 @@ function render_review_settings_page() {
             <?php wp_nonce_field( 'direktt_admin_review_save', 'direktt_admin_review_nonce' ); ?>
 
             <h2 class="title"><?php echo esc_html__( 'Review Message', 'direktt-customer-review' ); ?></h2>
-            <table class="form-table direktt-customer-review-table">
+            <table class="form-table">
                 <tr>
                     <th scope="row"><label for="direktt_review_template"><?php echo esc_html__( 'Message Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
@@ -209,7 +209,7 @@ function render_review_settings_page() {
                 </tr>
             </table>
             <h3><?php echo esc_html__( 'Send Message to Admin', 'direktt-customer-review' ); ?></h3>
-            <table class="form-table">
+            <table class="form-table direktt-customer-review-table">
                 <tr>
                     <th scope="row"><label for="direktt_review_send_to_admin"><?php echo esc_html__( 'Enable', 'direktt-customer-review' ); ?></label></th>
                     <td>
