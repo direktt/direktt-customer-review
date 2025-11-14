@@ -2,12 +2,20 @@
 
 A powerful WordPress plugin for prompting users to give you feedback on service, tightly integrated with the [Direktt WordPress Plugin](https://direktt.com/).
 
-- **Send customizable message templates** to users containing prompt for reviewing.
-- **Review full user reviews history** for every user via wp-admin or user profile tool.
+With Customer Review extension you can:
+
+- **Send customizable message templates** to customers including interactive message for review submission right from the chat interface.
+- **Review based response templates** to respond diferrently to positive and negative reviews
+- **Browse full user reviews history** for every user via Direktt mobile app or wp-admin.
+
+## Documentation
+
+You can find the detailed plugin documentation, guides and tutorials in the Wiki section:  
+https://github.com/direktt/direktt-customer-review/wiki
 
 ## Requirements
 
-- WordPress 5.0 or higher
+- WordPress 5.6 or higher
 - The [Direktt Plugin](https://wordpress.org/plugins/direktt/) (must be active)
 
 ## Installation
@@ -20,7 +28,7 @@ A powerful WordPress plugin for prompting users to give you feedback on service,
 
 ## Usage
 
-### Admin Interface
+### Plugin Settings
 
 - Find **Direktt > Settings > Customer Review Settings** in your WordPress admin menu.
 - Configure:
