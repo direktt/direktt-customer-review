@@ -214,7 +214,7 @@ function render_review_settings_page() {
                     <th scope="row"><label for="direktt_review_send_to_admin"><?php echo esc_html__( 'Enable', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <input type="checkbox" name="direktt_review_send_to_admin" id="direktt_review_send_to_admin" value="yes" <?php checked( $send_to_admin ); ?> />
-                        <label for="direktt_review_send_to_admin" class="description"><?php echo esc_html__( 'When enabled, a notification will be sent to the admin when a review is submitted.', 'direktt-customer-review' ); ?></label>
+                        <label for="direktt_review_send_to_admin"><span class="description"><?php echo esc_html__( 'When enabled, a notification will be sent to the admin when a review is submitted.', 'direktt-customer-review' ); ?></span></label>
                     </td>
                 </tr>
                 <tr id="direktt-customer-review-settings-mt-admin-row">
