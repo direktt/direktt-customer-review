@@ -40,13 +40,14 @@ https://github.com/direktt/direktt-customer-review/wiki
 ### Workflow
 
 - **User receives interactive review message**
-    1. After scanning the Review action QR code
-    1. OR initiated manually by channel admin in Direktt mobile app
+    - After scanning the Review action QR code
+    - OR initiated manually by channel admin in Direktt mobile app
 - **User leaves the rating**
-    1. User taps the respective rating button in chat interface    
+    - User taps the respective rating button in chat interface    
 - **User receives feedback message**.
-    1. Based on the rating, the user receives respective message. If the rating is above the treshold, user can be invited to submit the review on Google Reviews. If the rating is below the treshold, user can be asked to provide additional details
+    - Based on the rating, the user receives respective message. If the rating is above the treshold, user can be invited to submit the review on Google Reviews. If the rating is below the treshold, user can be asked to provide additional details
 - **If configured, channel admin receives notification and can immediately initiate the chat with the user**
+- All user's previous ratings are available in the **user profile** within Direktt mobile app.
 
 ## Notification Templates
 
