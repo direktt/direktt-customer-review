@@ -238,9 +238,18 @@ function render_review_settings_page() {
             </table>
 
             <?php
-            // $allowed_html = wp_kses_allowed_html( 'post' );
-            // echo wp_kses( Direktt_Public::direktt_render_alert_popup( 'direktt-review-settings-alert', '' ), $allowed_html );
+            add_thickbox();
             ?>
+
+            <div id="direktt-review-settings-alert" style="display: none;">
+                <div class="direktt-popup-content">
+                    <div class="direktt-popup-text">
+                        <h2></h2>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#TB_inline?width=200&height=100&inlineId=direktt-review-settings-alert" id="direktt-customer-review-show-alert" class="thickbox" style="display: none;"></a>
 
             <script>
                 jQuery(document).ready(function ($) {
@@ -255,23 +264,18 @@ function render_review_settings_page() {
                         const threshold = parseInt(thresholdInput.val(), 10);
                         
                         if (minRating >= maxRating) {
-                            $( '#direktt-review-settings-alert' ).addClass( 'direktt-popup-on' );
-                            $( '#direktt-review-settings-alert .direktt-popup-text' ).text( '<?php echo esc_js( __( 'Minimum Rating must be less than Maximum Rating.', 'direktt-customer-review' ) ); ?>' );
+                            $( '#direktt-customer-review-show-alert' ).click();
+                            $( '.direktt-popup-text h2' ).text( '<?php echo esc_js( __( 'Minimum Rating must be less than Maximum Rating.', 'direktt-customer-review' ) ); ?>' );
                             event.preventDefault();
                             return;
                         }
 
                         if (threshold < minRating || threshold > maxRating) {
-                            $( '#direktt-review-settings-alert' ).addClass( 'direktt-popup-on' );
-                            $( '#direktt-review-settings-alert .direktt-popup-text' ).text( '<?php echo esc_js( __( 'Threshold Rating must be between Minimum and Maximum Rating.', 'direktt-customer-review' ) ); ?>' );
+                            $( '#direktt-customer-review-show-alert' ).click();
+                            $( '.direktt-popup-text h2' ).text( '<?php echo esc_js( __( 'Threshold Rating must be between Minimum and Maximum Rating.', 'direktt-customer-review' ) ); ?>' );
                             event.preventDefault();
                             return;
                         }
-                    });
-
-                    $( '#direktt-review-settings-alert .direktt-popup-ok' ).off('click').on('click', function (event) {
-                        event.preventDefault();
-                        $( '#direktt-review-settings-alert' ).removeClass( 'direktt-popup-on' );
                     });
                 });
             </script>
