@@ -68,7 +68,8 @@ For every review, an entry is made with rating and timestamp. Review history is 
 The plugin supports updates directly from WordPress admin console.  
 
 You can find all plugin releases in the Releases section of this repository:  
-https://github.com/direktt/direktt-customer-review/releases.
+https://github.com/direktt/direktt-customer-review/releases.  
+
 ---
 
 ## License
