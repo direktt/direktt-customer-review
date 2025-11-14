@@ -139,8 +139,12 @@ function render_review_settings_page() {
         <form method="post" action="">
             <?php wp_nonce_field( 'direktt_admin_review_save', 'direktt_admin_review_nonce' ); ?>
 
+<<<<<<< HEAD
             <h2 class="title"><?php echo esc_html__( 'Review Message', 'direktt-customer-review' ); ?></h2>
             <table class="form-table">
+=======
+            <table class="form-table direktt-customer-review-table">
+>>>>>>> 7190d9ec3be586e337fe68d6b8fe89f34108bb95
                 <tr>
                     <th scope="row"><label for="direktt_review_template"><?php echo esc_html__( 'Message Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
@@ -218,7 +222,11 @@ function render_review_settings_page() {
                     </td>
                 </tr>
                 <tr id="direktt-customer-review-settings-mt-admin-row">
+<<<<<<< HEAD
                     <th scope="row"><label for="direktt_review_admin_template"><?php echo esc_html__( 'Message Template', 'direktt-customer-review' ); ?></label></th>
+=======
+                    <th scope="row"><label for="direktt_review_admin_template"><?php echo esc_html__( 'Admin Template', 'direktt-customer-review' ); ?></label></th>
+>>>>>>> 7190d9ec3be586e337fe68d6b8fe89f34108bb95
                     <td>
                         <select name="direktt_review_admin_template" id="direktt_review_admin_template">
                             <option value="0"><?php echo esc_html__( 'Select Template', 'direktt-customer-review' ); ?></option>
@@ -229,17 +237,22 @@ function render_review_settings_page() {
                             <?php endforeach; ?>
                         </select>
                         <p class="description"><?php echo esc_html__( 'This message will be sent to the admin when a review is submitted.', 'direktt-customer-review' ); ?></p>
+<<<<<<< HEAD
                         <p class="description"><?php echo esc_html__( 'You can use following dynamic placeholders in this template:', 'direktt-customer-review' ); ?></p>
 						<p class="description"><code><?php echo esc_html( '#display_name#' ); ?></code><?php echo esc_html__( ' - user\'s display name.', 'direktt-customer-review' ); ?></p>
 						<p class="description"><code><?php echo esc_html( '#subscription_id#' ); ?></code><?php echo esc_html__( ' - user\'s subscription ID.', 'direktt-customer-review' ); ?></p>
 					
+=======
+                        <p class="description"><?php echo esc_html__( 'You can use placeholders', 'direktt-customer-review' ); ?> <?php echo esc_html( '#display_name#' ); ?> <?php echo esc_html__( 'for display name, and', 'direktt-customer-review' ); ?> <?php echo esc_html( '#subscription_id#' ); ?> <?php echo esc_html__( 'for subscription id', 'direktt-customer-review' ); ?></p>
+                        <p class="description"><?php echo esc_html__( 'and', 'direktt-customer-review' ); ?> <?php echo esc_html( '#rating#' ); ?> <?php echo esc_html__( 'for rating that selected.', 'direktt-customer-review' ); ?></p>
+>>>>>>> 7190d9ec3be586e337fe68d6b8fe89f34108bb95
                     </td>
                 </tr>
             </table>
 
             <?php
-            $allowed_html = wp_kses_allowed_html( 'post' );
-            echo wp_kses( Direktt_Public::direktt_render_alert_popup( 'direktt-review-settings-alert', '' ), $allowed_html );
+            // $allowed_html = wp_kses_allowed_html( 'post' );
+            // echo wp_kses( Direktt_Public::direktt_render_alert_popup( 'direktt-review-settings-alert', '' ), $allowed_html );
             ?>
 
             <script>
@@ -595,6 +608,7 @@ function on_submit_review( $request ) {
                 array(
                     'subscription_id' => $subscription_id,
                     'display_name'    => $display_name,
+                    'rating'          => $rating,
                 )
             );
         }
