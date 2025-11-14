@@ -53,9 +53,9 @@ https://github.com/direktt/direktt-customer-review/wiki
 
 Direktt Message templates support following dynamic placeholders:
 
-- `#display_name#` — display name of the new subsriber (only for admin message)
-- `#subscriptionId#` — subscription id of the new subscriber (only for admin message)
-- `#rating#` — rating that user selected (only for admin message)
+- `#display_name#` — display name of the subscriber **(only for admin notifications)**
+- `#subscriptionId#` — subscription id of the subscriber **(only for admin notifications)**
+- `#rating#` — rating left by the subscriber **(only for admin notifications)**
 
 ## Recent Reviews
 
