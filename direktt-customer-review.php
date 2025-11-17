@@ -160,13 +160,12 @@ function render_review_settings_page() {
                     <td>
                         <fieldset>
                             <legend class="screen-reader-text"><span><?php echo esc_html__( 'Rating', 'direktt-customer-review' ); ?></span></legend>
-                            <label for="direktt_review_min_rating"><?php echo esc_html__( 'Minimum', 'direktt-customer-review' ); ?></label>
-                            <input type="number" name="direktt_review_min_rating" id="direktt_review_min_rating" value="<?php echo esc_attr( $review_min_rating ); ?>" min="0" class="small text"/>
-                            <br>
-                            <label for="direktt_review_max_rating"><?php echo esc_html__( 'Maximum', 'direktt-customer-review' ); ?></label>
-                            <input type="number" name="direktt_review_max_rating" id="direktt_review_max_rating" value="<?php echo esc_attr( $review_max_rating ); ?>" min="0" class="small text"/>
+                            <label for="direktt_review_min_rating"><?php echo esc_html__( 'From ', 'direktt-customer-review' ); ?></label>
+                            <input type="number" name="direktt_review_min_rating" id="direktt_review_min_rating" value="<?php echo esc_attr( $review_min_rating ); ?>" min="0" class="small-text"/>
+                            <label for="direktt_review_max_rating"><?php echo esc_html__( 'to ', 'direktt-customer-review' ); ?></label>
+                            <input type="number" name="direktt_review_max_rating" id="direktt_review_max_rating" value="<?php echo esc_attr( $review_max_rating ); ?>" min="0" class="small-text"/>
                         </fieldset>
-                        <p class="description"><?php echo esc_html__( 'Define the rating scale for the customer reviews.', 'direktt-customer-review' ); ?></p>
+                        <p class="description"><?php echo esc_html__( 'Set the minimum and maximum values for the customer rating scale.', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
             </table>
@@ -175,12 +174,12 @@ function render_review_settings_page() {
                 <tr>
                     <th scope="row"><label for="direktt_review_threshold"><?php echo esc_html__( 'Threshold Rating', 'direktt-customer-review' ); ?></label></th>
                     <td>
-                        <input type="number" name="direktt_review_threshold" id="direktt_review_threshold" value="<?php echo esc_attr( $review_threshold ); ?>" min="0" />
-                        <p class="description"><?php echo esc_html__( 'Define the threshold rating to differentiate between positive and negative reviews.', 'direktt-customer-review' ); ?></p>
+                        <input type="number" name="direktt_review_threshold" id="direktt_review_threshold" value="<?php echo esc_attr( $review_threshold ); ?>" min="0" class="small-text" />
+                        <p class="description"><?php echo esc_html__( 'Set the rating threshold that separates positive and negative reviews.', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="direktt_review_under_threshold_template"><?php echo esc_html__( 'Under Threshold Template', 'direktt-customer-review' ); ?></label></th>
+                    <th scope="row"><label for="direktt_review_under_threshold_template"><?php echo esc_html__( 'Under-Threshold Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <select name="direktt_review_under_threshold_template" id="direktt_review_under_threshold_template">
                             <option value="0"><?php echo esc_html__( 'Select Template', 'direktt-customer-review' ); ?></option>
@@ -190,11 +189,11 @@ function render_review_settings_page() {
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <p class="description"><?php echo esc_html__( 'If rating is below this threshold, the under threshold template will be used.', 'direktt-customer-review' ); ?></p>
+                        <p class="description"><?php echo esc_html__( 'Used when the rating is below the threshold.', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="direktt_review_over_threshold_template"><?php echo esc_html__( 'Over Threshold Template', 'direktt-customer-review' ); ?></label></th>
+                    <th scope="row"><label for="direktt_review_over_threshold_template"><?php echo esc_html__( 'Over-Threshold Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <select name="direktt_review_over_threshold_template" id="direktt_review_over_threshold_template">
                             <option value="0"><?php echo esc_html__( 'Select Template', 'direktt-customer-review' ); ?></option>
@@ -204,7 +203,7 @@ function render_review_settings_page() {
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <p class="description"><?php echo esc_html__( 'If rating is above this threshold, the over threshold template will be used.', 'direktt-customer-review' ); ?></p>
+                        <p class="description"><?php echo esc_html__( 'Used when the rating is above the threshold.', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
             </table>
