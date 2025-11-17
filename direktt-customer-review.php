@@ -85,6 +85,28 @@ function setup_review_settings_page() {
     );
 }
 
+add_action( 'admin_enqueue_scripts', 'direktt_customer_review_enqueue_scripts' );
+
+function direktt_customer_review_enqueue_scripts( $hook ) {
+	if ( $hook === 'direktt_page_direktt-settings' && isset( $_GET['subpage'] ) && sanitize_text_field( wp_unslash( $_GET['subpage'] ) ) === 'review' ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Justification: not a form processing, subpage based router for enqueuing scripts.
+		wp_enqueue_script(
+			'qr-code-styling', // Handle
+			plugin_dir_url( __DIR__ ) . 'direktt/public/js/qr-code-styling.js', // Source
+			array(), // Dependencies (none in this case)
+			filemtime( plugin_dir_path( __DIR__ ) . 'direktt/public/js/qr-code-styling.js' ), // Version based on file modification time
+			false
+		);
+
+		wp_enqueue_script(
+			'tinycolor', // Handle
+			plugin_dir_url( __DIR__ ) . 'direktt/public/js/tinycolor.js', // Source
+			array(), // Dependencies (none in this case)
+			filemtime( plugin_dir_path( __DIR__ ) . 'direktt/public/js/tinycolor.js' ), // Version based on file modification time
+			false
+		);
+	}
+}
+
 function render_review_settings_page() {
     $success = false;
 
@@ -281,6 +303,103 @@ function render_review_settings_page() {
 
             <?php submit_button( esc_html__( 'Save Settings', 'direktt-customer-review' ) ); ?>
         </form>
+
+        <h2 class="title"><?php echo esc_html__( 'Review QR Code', 'direktt-customer-review' ); ?></h2>
+        <table class="form-table">
+            <tr>
+                <th scope="row"><?php echo esc_html__( 'QR Code', 'direktt-customer-review' ); ?></th>
+                <td>
+                    <div class="direktt-customer-review-qr-code-view">
+                        <div id="direktt-customer-review-qr-code-canvas" ref="qrCodeRef"></div>
+                        <div id="direktt-customer-review-qr-code-download">
+                            <select id="direktt-customer-review-qr-code-format">
+                                <option value="svg">SVG</option>
+                                <option value="png">PNG</option>
+                                <option value="jpeg">JPEG</option>
+                                <option value="webp">WEBP</option>
+                            </select>
+                            <button id="direktt-customer-review-qr-code-download-button" class="button"><?php echo esc_html__( 'Download', 'direktt-customer-review' ); ?></button>
+                        </div>
+                    </div>
+                    <p class="description"><?php echo esc_html__( 'Show this QR code to your customers, so they can easily leave a review.', 'direktt-customer-review' ); ?></p>
+                    <?php
+                    $actionObject = array(
+                        'action' => array(
+                            'type'    => 'api',
+                            'params'  => array(
+                                'actionType' => 'init_review',
+                                'successMessage' => esc_html__( 'Review initialized successfully! Go to chat to leave your review.', 'direktt-customer-review' ),
+                            ),
+                            'retVars' => (object) array(),
+                        ),
+                    );
+                    ?>
+                    <script type="text/javascript">
+                        document.addEventListener('DOMContentLoaded', function () {
+                            function shiftColors(baseColor) {
+                                let inputColor = baseColor;
+                                if (!inputColor) {
+                                    inputColor = "#000000"
+                                }
+
+                                const tc = tinycolor(inputColor);
+                                if (tc.isDark()) {
+                                    // If dark, lighten by 30%
+                                    return tc.lighten(30).toHexString();
+                                } else {
+                                    // If light, darken by 30%
+                                    return tc.darken(30).toHexString();
+                                }
+                            }
+
+                            const options = {
+                                width: 300,
+                                height: 300,
+                                type: 'svg',
+                                data: '<?php echo wp_json_encode( $actionObject ); ?>',
+                                image: direktt_settings_object.qr_code_logo_url ? direktt_settings_object.qr_code_logo_url : '',
+                                margin: 10,
+                                qrOptions: {
+                                    typeNumber: 0,
+                                    mode: 'Byte',
+                                    errorCorrectionLevel: 'Q'
+                                },
+                                imageOptions: {
+                                    hideBackgroundDots: true,
+                                    imageSize: 0.5,
+                                    margin: 10,
+                                    crossOrigin: 'anonymous',
+                                },
+                                dotsOptions: {
+                                    color: direktt_settings_object.qr_code_color ? direktt_settings_object.qr_code_color : '#000000',
+                                    type: 'rounded'
+                                },
+                                backgroundOptions: {
+                                    color: direktt_settings_object.qr_code_bckg_color ? direktt_settings_object.qr_code_bckg_color : '#ffffff',
+                                },
+                                cornersSquareOptions: {
+                                    color: shiftColors(direktt_settings_object.qr_code_color),
+                                    type: 'extra-rounded',
+                                },
+                                cornersDotOptions: {
+                                    color: shiftColors(direktt_settings_object.qr_code_color),
+                                    type: 'dot',
+                                }
+                            };
+                            const qrCode = new QRCodeStyling(options);
+
+                            qrCode.append(document.getElementById("direktt-customer-review-qr-code-canvas"));
+
+                            document.getElementById("direktt-customer-review-qr-code-download-button").addEventListener("click", function () {
+                                const formatSelect = document.getElementById("direktt-customer-review-qr-code-format");
+                                const selectedFormat = formatSelect.value;
+                                qrCode.download({ extension: selectedFormat });
+                            });
+                        });
+                    </script>
+                </td>
+            </tr>
+        </table>
     </div>
     <?php
 }
