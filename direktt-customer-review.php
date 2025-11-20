@@ -116,7 +116,7 @@ function render_review_settings_page() {
         update_option( 'direktt_review_template', isset( $_POST['direktt_review_template'] ) ? intval( $_POST['direktt_review_template'] ) : 0 );
         update_option( 'direktt_review_min_rating', isset( $_POST['direktt_review_min_rating'] ) ? intval( $_POST['direktt_review_min_rating'] ) : 0 );
         update_option( 'direktt_review_max_rating', isset( $_POST['direktt_review_max_rating'] ) ? intval( $_POST['direktt_review_max_rating'] ) : 0 );
-        update_option( 'direktt_review_threshold', isset( $_POST['direktt_review_threshold'] ) ? intval( $_POST['direktt_review_threshold'] ) : 0 );
+        update_option( 'direktt_review_threshold', isset( $_POST['direktt_review_threshold'] ) ? floatval( $_POST['direktt_review_threshold'] ) : 2 );
         update_option( 'direktt_review_under_treshold_template', isset( $_POST['direktt_review_under_threshold_template'] ) ? intval( $_POST['direktt_review_under_threshold_template'] ) : 0 );
         update_option( 'direktt_review_over_treshold_template', isset( $_POST['direktt_review_over_threshold_template'] ) ? intval( $_POST['direktt_review_over_threshold_template'] ) : 0 );
         update_option( 'direktt_review_send_to_admin', isset( $_POST['direktt_review_send_to_admin'] ) ? 'yes' : 'no' );
@@ -128,7 +128,7 @@ function render_review_settings_page() {
     $review_template                 = intval( get_option( 'direktt_review_template', 0 ) );
     $review_min_rating               = intval( get_option( 'direktt_review_min_rating', 1 ) );
     $review_max_rating               = intval( get_option( 'direktt_review_max_rating', 5 ) );
-    $review_threshold                = intval( get_option( 'direktt_review_threshold', 3 ) );
+    $review_threshold                = floatval( get_option( 'direktt_review_threshold', 2 ) );
     $review_under_threshold_template = intval( get_option( 'direktt_review_under_treshold_template', 0 ) );
     $review_over_threshold_template  = intval( get_option( 'direktt_review_over_treshold_template', 0 ) );
     $send_to_admin                   = intval( get_option( 'direktt_review_send_to_admin', 0 ) );
@@ -161,13 +161,13 @@ function render_review_settings_page() {
         <form method="post" action="">
             <?php wp_nonce_field( 'direktt_admin_review_save', 'direktt_admin_review_nonce' ); ?>
 
-            <h2 class="title"><?php echo esc_html__( 'Review Message', 'direktt-customer-review' ); ?></h2>
+            <h2 class="title"><?php echo esc_html__( 'Review Request & Rating Scale', 'direktt-customer-review' ); ?></h2>
             <table class="form-table">
                 <tr>
                     <th scope="row"><label for="direktt_review_template"><?php echo esc_html__( 'Message Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <select name="direktt_review_template" id="direktt_review_template">
-                            <option value="0"><?php echo esc_html__( 'Select Template', 'direktt-customer-review' ); ?></option>
+                            <option value="0"><?php echo esc_html__( 'Select Message Template', 'direktt-customer-review' ); ?></option>
                             <?php foreach ( $template_posts as $post ) : ?>
                                 <option value="<?php echo esc_attr( $post->ID ); ?>" <?php selected( $review_template, $post->ID ); ?>>
                                     <?php echo esc_html( $post->post_title ); ?>
@@ -178,7 +178,7 @@ function render_review_settings_page() {
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><?php echo esc_html__( 'Rating', 'direktt-customer-review' ); ?></th>
+                    <th scope="row"><?php echo esc_html__( 'Rating Scale', 'direktt-customer-review' ); ?></th>
                     <td>
                         <fieldset>
                             <legend class="screen-reader-text"><span><?php echo esc_html__( 'Rating', 'direktt-customer-review' ); ?></span></legend>
@@ -191,58 +191,55 @@ function render_review_settings_page() {
                     </td>
                 </tr>
             </table>
-            <h2 class="title"><?php echo esc_html__( 'Review Handling', 'direktt-customer-review' ); ?></h2>
-            <table class="form-table">
+            <h2 class="title"><?php echo esc_html__( 'Review Submission Handling', 'direktt-customer-review' ); ?></h2>
+            <table class="form-table direktt-customer-review-table">
                 <tr>
                     <th scope="row"><label for="direktt_review_threshold"><?php echo esc_html__( 'Threshold Rating', 'direktt-customer-review' ); ?></label></th>
                     <td>
-                        <input type="number" name="direktt_review_threshold" id="direktt_review_threshold" value="<?php echo esc_attr( $review_threshold ); ?>" min="0" class="small-text" />
+                        <input type="number" step="0.5" name="direktt_review_threshold" id="direktt_review_threshold" value="<?php echo esc_attr( $review_threshold ); ?>" min="0" class="small-text" />
                         <p class="description"><?php echo esc_html__( 'Set the rating threshold that separates positive and negative reviews.', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="direktt_review_under_threshold_template"><?php echo esc_html__( 'Under-Threshold Template', 'direktt-customer-review' ); ?></label></th>
+                    <th scope="row"><label for="direktt_review_under_threshold_template"><?php echo esc_html__( 'Low Rating Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <select name="direktt_review_under_threshold_template" id="direktt_review_under_threshold_template">
-                            <option value="0"><?php echo esc_html__( 'Select Template', 'direktt-customer-review' ); ?></option>
+                            <option value="0"><?php echo esc_html__( 'Select Message Template', 'direktt-customer-review' ); ?></option>
                             <?php foreach ( $template_posts as $post ) : ?>
                                 <option value="<?php echo esc_attr( $post->ID ); ?>" <?php selected( $review_under_threshold_template, $post->ID ); ?>>
                                     <?php echo esc_html( $post->post_title ); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <p class="description"><?php echo esc_html__( 'Used when the rating is below the threshold.', 'direktt-customer-review' ); ?></p>
+                        <p class="description"><?php echo esc_html__( 'This message template will be sent to the subscriber if their rating is lower than the threshold.', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="direktt_review_over_threshold_template"><?php echo esc_html__( 'Over-Threshold Template', 'direktt-customer-review' ); ?></label></th>
+                    <th scope="row"><label for="direktt_review_over_threshold_template"><?php echo esc_html__( 'High Rating Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <select name="direktt_review_over_threshold_template" id="direktt_review_over_threshold_template">
-                            <option value="0"><?php echo esc_html__( 'Select Template', 'direktt-customer-review' ); ?></option>
+                            <option value="0"><?php echo esc_html__( 'Select Message Template', 'direktt-customer-review' ); ?></option>
                             <?php foreach ( $template_posts as $post ) : ?>
                                 <option value="<?php echo esc_attr( $post->ID ); ?>" <?php selected( $review_over_threshold_template, $post->ID ); ?>>
                                     <?php echo esc_html( $post->post_title ); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <p class="description"><?php echo esc_html__( 'Used when the rating is above the threshold.', 'direktt-customer-review' ); ?></p>
+                        <p class="description"><?php echo esc_html__( 'This message template will be sent to the subscriber if their rating is higher than the threshold.', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
-            </table>
-            <h3><?php echo esc_html__( 'Send Message to Admin', 'direktt-customer-review' ); ?></h3>
-            <table class="form-table direktt-customer-review-table">
                 <tr>
-                    <th scope="row"><label for="direktt_review_send_to_admin"><?php echo esc_html__( 'Enable', 'direktt-customer-review' ); ?></label></th>
+                    <th scope="row"><label for="direktt_review_send_to_admin"><?php echo esc_html__( 'Send to Admin', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <input type="checkbox" name="direktt_review_send_to_admin" id="direktt_review_send_to_admin" value="yes" <?php checked( $send_to_admin ); ?> />
-                        <label for="direktt_review_send_to_admin"><span class="description"><?php echo esc_html__( 'When enabled, a notification will be sent to the admin when a review is submitted.', 'direktt-customer-review' ); ?></span></label>
+                        <label for="direktt_review_send_to_admin"><span class="description"><?php echo esc_html__( 'When enabled, a message will be sent to the admin when a review is submitted.', 'direktt-customer-review' ); ?></span></label>
                     </td>
                 </tr>
                 <tr id="direktt-customer-review-settings-mt-admin-row">
                     <th scope="row"><label for="direktt_review_admin_template"><?php echo esc_html__( 'Message Template', 'direktt-customer-review' ); ?></label></th>
                     <td>
                         <select name="direktt_review_admin_template" id="direktt_review_admin_template">
-                            <option value="0"><?php echo esc_html__( 'Select Template', 'direktt-customer-review' ); ?></option>
+                            <option value="0"><?php echo esc_html__( 'Select Message Template', 'direktt-customer-review' ); ?></option>
                             <?php foreach ( $template_posts as $post ) : ?>
                                 <option value="<?php echo esc_attr( $post->ID ); ?>" <?php selected( $review_admin_template, $post->ID ); ?>>
                                     <?php echo esc_html( $post->post_title ); ?>
@@ -253,7 +250,7 @@ function render_review_settings_page() {
                         <p class="description"><?php echo esc_html__( 'You can use following dynamic placeholders in this template:', 'direktt-customer-review' ); ?></p>
 						<p class="description"><code><?php echo esc_html( '#display_name#' ); ?></code><?php echo esc_html__( ' - user\'s display name.', 'direktt-customer-review' ); ?></p>
 						<p class="description"><code><?php echo esc_html( '#subscription_id#' ); ?></code><?php echo esc_html__( ' - user\'s subscription ID.', 'direktt-customer-review' ); ?></p>
-					
+						<p class="description"><code><?php echo esc_html( '#rating#' ); ?></code><?php echo esc_html__( ' - user\'s submitted rating.', 'direktt-customer-review' ); ?></p>
                     </td>
                 </tr>
             </table>
@@ -297,6 +294,13 @@ function render_review_settings_page() {
                             event.preventDefault();
                             return;
                         }
+
+                        if (maxRating - minRating > 4) {
+                            $( '#direktt-customer-review-show-alert' ).click();
+                            $( '.direktt-popup-text h2' ).text( '<?php echo esc_js( __( 'Minimum and Maximum Rating difference cannot exceed 4.', 'direktt-customer-review' ) ); ?>' );
+                            event.preventDefault();
+                            return;
+                        }
                     });
                 });
             </script>
@@ -304,102 +308,97 @@ function render_review_settings_page() {
             <?php submit_button( esc_html__( 'Save Settings', 'direktt-customer-review' ) ); ?>
         </form>
 
-        <h2 class="title"><?php echo esc_html__( 'Review QR Code', 'direktt-customer-review' ); ?></h2>
-        <table class="form-table">
-            <tr>
-                <th scope="row"><?php echo esc_html__( 'QR Code', 'direktt-customer-review' ); ?></th>
-                <td>
-                    <div class="direktt-customer-review-qr-code-view">
-                        <div id="direktt-customer-review-qr-code-canvas" ref="qrCodeRef"></div>
-                        <div id="direktt-customer-review-qr-code-download">
-                            <select id="direktt-customer-review-qr-code-format">
-                                <option value="svg">SVG</option>
-                                <option value="png">PNG</option>
-                                <option value="jpeg">JPEG</option>
-                                <option value="webp">WEBP</option>
-                            </select>
-                            <button id="direktt-customer-review-qr-code-download-button" class="button"><?php echo esc_html__( 'Download', 'direktt-customer-review' ); ?></button>
-                        </div>
-                    </div>
-                    <p class="description"><?php echo esc_html__( 'Show this QR code to your customers, so they can easily leave a review.', 'direktt-customer-review' ); ?></p>
-                    <?php
-                    $actionObject = array(
-                        'action' => array(
-                            'type'    => 'api',
-                            'params'  => array(
-                                'actionType' => 'init_review',
-                                'successMessage' => esc_html__( 'Review initialized successfully! Go to chat to leave your review.', 'direktt-customer-review' ),
-                            ),
-                            'retVars' => (object) array(),
-                        ),
-                    );
-                    ?>
-                    <script type="text/javascript">
-                        document.addEventListener('DOMContentLoaded', function () {
-                            function shiftColors(baseColor) {
-                                let inputColor = baseColor;
-                                if (!inputColor) {
-                                    inputColor = "#000000"
-                                }
+        <div class="form-table direktt-customer-review-qr-code-section">
+            <h2 class="title"><?php echo esc_html__( 'Review Request QR Code', 'direktt-customer-review' ); ?></h2>
+            <div class="direktt-customer-review-qr-code-view">
+                <div id="direktt-customer-review-qr-code-canvas"></div>
+                <div id="direktt-customer-review-qr-code-download">
+                    <select id="direktt-customer-review-qr-code-format">
+                        <option value="svg"><?php echo esc_html( 'SVG' ); ?></option>
+                        <option value="png"><?php echo esc_html( 'PNG' ); ?></option>
+                        <option value="jpeg"><?php echo esc_html( 'JPEG' ); ?></option>
+                        <option value="webp"><?php echo esc_html( 'WEBP' ); ?></option>
+                    </select>
+                    <button id="direktt-customer-review-qr-code-download-button" class="button"><?php echo esc_html__( 'Download', 'direktt-customer-review' ); ?></button>
+                </div>
+            </div>
+            <p class="description"><?php echo esc_html__( 'Show this QR code to your customers, so they can easily leave a review.', 'direktt-customer-review' ); ?></p>
+            <?php
+            $actionObject = array(
+                'action' => array(
+                    'type'    => 'api',
+                    'params'  => array(
+                        'actionType' => 'init_review',
+                        'successMessage' => esc_html__( 'Review initialized successfully! Go to chat to leave your review.', 'direktt-customer-review' ),
+                    ),
+                    'retVars' => (object) array(),
+                ),
+            );
+            ?>
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function () {
+                    function shiftColors(baseColor) {
+                        let inputColor = baseColor;
+                        if (!inputColor) {
+                            inputColor = "#000000"
+                        }
 
-                                const tc = tinycolor(inputColor);
-                                if (tc.isDark()) {
-                                    // If dark, lighten by 30%
-                                    return tc.lighten(30).toHexString();
-                                } else {
-                                    // If light, darken by 30%
-                                    return tc.darken(30).toHexString();
-                                }
-                            }
+                        const tc = tinycolor(inputColor);
+                        if (tc.isDark()) {
+                            // If dark, lighten by 30%
+                            return tc.lighten(30).toHexString();
+                        } else {
+                            // If light, darken by 30%
+                            return tc.darken(30).toHexString();
+                        }
+                    }
 
-                            const options = {
-                                width: 300,
-                                height: 300,
-                                type: 'svg',
-                                data: '<?php echo wp_json_encode( $actionObject ); ?>',
-                                image: direktt_settings_object.qr_code_logo_url ? direktt_settings_object.qr_code_logo_url : '',
-                                margin: 10,
-                                qrOptions: {
-                                    typeNumber: 0,
-                                    mode: 'Byte',
-                                    errorCorrectionLevel: 'Q'
-                                },
-                                imageOptions: {
-                                    hideBackgroundDots: true,
-                                    imageSize: 0.5,
-                                    margin: 10,
-                                    crossOrigin: 'anonymous',
-                                },
-                                dotsOptions: {
-                                    color: direktt_settings_object.qr_code_color ? direktt_settings_object.qr_code_color : '#000000',
-                                    type: 'rounded'
-                                },
-                                backgroundOptions: {
-                                    color: direktt_settings_object.qr_code_bckg_color ? direktt_settings_object.qr_code_bckg_color : '#ffffff',
-                                },
-                                cornersSquareOptions: {
-                                    color: shiftColors(direktt_settings_object.qr_code_color),
-                                    type: 'extra-rounded',
-                                },
-                                cornersDotOptions: {
-                                    color: shiftColors(direktt_settings_object.qr_code_color),
-                                    type: 'dot',
-                                }
-                            };
-                            const qrCode = new QRCodeStyling(options);
+                    const options = {
+                        width: 300,
+                        height: 300,
+                        type: 'svg',
+                        data: '<?php echo wp_json_encode( $actionObject ); ?>',
+                        image: direktt_settings_object.qr_code_logo_url ? direktt_settings_object.qr_code_logo_url : '',
+                        margin: 10,
+                        qrOptions: {
+                            typeNumber: 0,
+                            mode: 'Byte',
+                            errorCorrectionLevel: 'Q'
+                        },
+                        imageOptions: {
+                            hideBackgroundDots: true,
+                            imageSize: 0.5,
+                            margin: 10,
+                            crossOrigin: 'anonymous',
+                        },
+                        dotsOptions: {
+                            color: direktt_settings_object.qr_code_color ? direktt_settings_object.qr_code_color : '#000000',
+                            type: 'rounded'
+                        },
+                        backgroundOptions: {
+                            color: direktt_settings_object.qr_code_bckg_color ? direktt_settings_object.qr_code_bckg_color : '#ffffff',
+                        },
+                        cornersSquareOptions: {
+                            color: shiftColors(direktt_settings_object.qr_code_color),
+                            type: 'extra-rounded',
+                        },
+                        cornersDotOptions: {
+                            color: shiftColors(direktt_settings_object.qr_code_color),
+                            type: 'dot',
+                        }
+                    };
+                    const qrCode = new QRCodeStyling(options);
 
-                            qrCode.append(document.getElementById("direktt-customer-review-qr-code-canvas"));
+                    qrCode.append(document.getElementById("direktt-customer-review-qr-code-canvas"));
 
-                            document.getElementById("direktt-customer-review-qr-code-download-button").addEventListener("click", function () {
-                                const formatSelect = document.getElementById("direktt-customer-review-qr-code-format");
-                                const selectedFormat = formatSelect.value;
-                                qrCode.download({ extension: selectedFormat });
-                            });
-                        });
-                    </script>
-                </td>
-            </tr>
-        </table>
+                    document.getElementById("direktt-customer-review-qr-code-download-button").addEventListener("click", function () {
+                        const formatSelect = document.getElementById("direktt-customer-review-qr-code-format");
+                        const selectedFormat = formatSelect.value;
+                        qrCode.download({ extension: selectedFormat });
+                    });
+                });
+            </script>
+        </div>
     </div>
     <?php
 }
@@ -688,7 +687,7 @@ function on_submit_review( $request ) {
         $subscription_id = $direktt_user['direktt_user_id'] ?? '';
         $rating          = intval( $request['rating'] );
 
-        $review_threshold                = intval( get_option( 'direktt_review_threshold', 3 ) );
+        $review_threshold                = floatval( get_option( 'direktt_review_threshold', 2 ) );
         $review_under_threshold_template = intval( get_option( 'direktt_review_under_treshold_template', 0 ) );
         $review_over_threshold_template  = intval( get_option( 'direktt_review_over_treshold_template', 0 ) );
 
