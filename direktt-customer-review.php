@@ -301,6 +301,13 @@ function render_review_settings_page() {
                             event.preventDefault();
                             return;
                         }
+
+                        if (maxRating - minRating < 1) {
+                            $( '#direktt-customer-review-show-alert' ).click();
+                            $( '.direktt-popup-text h2' ).text( '<?php echo esc_js( __( 'Minimum and Maximum Rating difference cannot be less than 1.', 'direktt-customer-review' ) ); ?>' );
+                            event.preventDefault();
+                            return;
+                        }
                     });
                 });
             </script>
