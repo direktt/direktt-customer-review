@@ -236,7 +236,7 @@ function render_review_settings_page() {
                     </td>
                 </tr>
                 <tr id="direktt-customer-review-settings-mt-admin-row">
-                    <th scope="row"><label for="direktt_review_admin_template"><?php echo esc_html__( 'Message Template', 'direktt-customer-review' ); ?></label></th>
+                    <th scope="row"></th>
                     <td>
                         <select name="direktt_review_admin_template" id="direktt_review_admin_template">
                             <option value="0"><?php echo esc_html__( 'Select Message Template', 'direktt-customer-review' ); ?></option>
