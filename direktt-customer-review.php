@@ -183,9 +183,9 @@ function render_review_settings_page() {
                         <fieldset>
                             <legend class="screen-reader-text"><span><?php echo esc_html__( 'Rating', 'direktt-customer-review' ); ?></span></legend>
                             <label for="direktt_review_min_rating"><?php echo esc_html__( 'From ', 'direktt-customer-review' ); ?></label>
-                            <input type="number" name="direktt_review_min_rating" id="direktt_review_min_rating" value="<?php echo esc_attr( $review_min_rating ); ?>" min="0" class="small-text"/>
+                            <input type="number" name="direktt_review_min_rating" id="direktt_review_min_rating" value="<?php echo esc_attr( $review_min_rating ); ?>" min="<?php echo esc_attr( $review_max_rating - 4 ); ?>" max="<?php echo esc_attr( $review_max_rating - 1 ); ?>" class="small-text"/>
                             <label for="direktt_review_max_rating"><?php echo esc_html__( 'to ', 'direktt-customer-review' ); ?></label>
-                            <input type="number" name="direktt_review_max_rating" id="direktt_review_max_rating" value="<?php echo esc_attr( $review_max_rating ); ?>" min="0" class="small-text"/>
+                            <input type="number" name="direktt_review_max_rating" id="direktt_review_max_rating" value="<?php echo esc_attr( $review_max_rating ); ?>" min="<?php echo esc_attr( $review_min_rating + 1 ); ?>" max="<?php echo esc_attr( $review_min_rating + 4 ); ?>" class="small-text"/>
                         </fieldset>
                         <p class="description"><?php echo esc_html__( 'Set the minimum and maximum values for the customer rating scale.', 'direktt-customer-review' ); ?></p>
                     </td>
@@ -254,60 +254,24 @@ function render_review_settings_page() {
                     </td>
                 </tr>
             </table>
-
-            <?php
-            add_thickbox();
-            ?>
-
-            <div id="direktt-review-settings-alert" style="display: none;">
-                <div class="direktt-popup-content">
-                    <div class="direktt-popup-text">
-                        <h2></h2>
-                    </div>
-                </div>
-            </div>
-
-            <a href="#TB_inline?width=200&height=100&inlineId=direktt-review-settings-alert" id="direktt-customer-review-show-alert" class="thickbox" style="display: none;"></a>
-
             <script>
                 jQuery(document).ready(function ($) {
-                    const form = $('form');
                     const minRatingInput = $('#direktt_review_min_rating');
                     const maxRatingInput = $('#direktt_review_max_rating');
                     const thresholdInput = $('#direktt_review_threshold');
-                    
-                    form.on('submit', function (event) {
-                        const minRating = parseInt(minRatingInput.val(), 10);
-                        const maxRating = parseInt(maxRatingInput.val(), 10);
-                        const threshold = parseInt(thresholdInput.val(), 10);
-                        
-                        if (minRating >= maxRating) {
-                            $( '#direktt-customer-review-show-alert' ).click();
-                            $( '.direktt-popup-text h2' ).text( '<?php echo esc_js( __( 'Minimum Rating must be less than Maximum Rating.', 'direktt-customer-review' ) ); ?>' );
-                            event.preventDefault();
-                            return;
-                        }
 
-                        if (threshold < minRating || threshold > maxRating) {
-                            $( '#direktt-customer-review-show-alert' ).click();
-                            $( '.direktt-popup-text h2' ).text( '<?php echo esc_js( __( 'Threshold Rating must be between Minimum and Maximum Rating.', 'direktt-customer-review' ) ); ?>' );
-                            event.preventDefault();
-                            return;
-                        }
+                    minRatingInput.on('change', function () {
+                        thresholdInput.attr('min', parseInt(minRatingInput.val(), 10));
+                        thresholdInput.attr('max', parseInt(maxRatingInput.val(), 10) - 0.5);
+                        maxRatingInput.attr('min', parseInt(minRatingInput.val(), 10) + 1);
+                        maxRatingInput.attr('max', parseInt(minRatingInput.val(), 10) + 4);
+                    });
 
-                        if (maxRating - minRating > 4) {
-                            $( '#direktt-customer-review-show-alert' ).click();
-                            $( '.direktt-popup-text h2' ).text( '<?php echo esc_js( __( 'Minimum and Maximum Rating difference cannot exceed 4.', 'direktt-customer-review' ) ); ?>' );
-                            event.preventDefault();
-                            return;
-                        }
-
-                        if (maxRating - minRating < 1) {
-                            $( '#direktt-customer-review-show-alert' ).click();
-                            $( '.direktt-popup-text h2' ).text( '<?php echo esc_js( __( 'Minimum and Maximum Rating difference cannot be less than 1.', 'direktt-customer-review' ) ); ?>' );
-                            event.preventDefault();
-                            return;
-                        }
+                    maxRatingInput.on('change', function () {
+                        thresholdInput.attr('max', parseInt(maxRatingInput.val(), 10) - 0.5);
+                        thresholdInput.attr('min', parseInt(minRatingInput.val(), 10));
+                        minRatingInput.attr('max', parseInt(maxRatingInput.val(), 10) - 1);
+                        minRatingInput.attr('min', parseInt(maxRatingInput.val(), 10) - 4);
                     });
                 });
             </script>
