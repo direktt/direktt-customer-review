@@ -315,7 +315,7 @@ function render_review_settings_page() {
             <?php submit_button( esc_html__( 'Save Settings', 'direktt-customer-review' ) ); ?>
         </form>
 
-        <div class="form-table direktt-customer-review-qr-code-section">
+        <div class="direktt-customer-review-qr-code-section">
             <h2 class="title"><?php echo esc_html__( 'Review Request QR Code', 'direktt-customer-review' ); ?></h2>
             <div class="direktt-customer-review-qr-code-view">
                 <div id="direktt-customer-review-qr-code-canvas"></div>
