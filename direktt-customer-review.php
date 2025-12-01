@@ -637,9 +637,10 @@ function handle_direktt_send_review_template() {
 
 
 add_action( 'wp_ajax_direktt_send_review_template', 'handle_direktt_send_review_template' );
+add_action( 'wp_ajax_nopriv_direktt_send_review_template', 'handle_direktt_send_review_template' );
 
 function on_init_review() {
-    global $direktt_user;
+    $direktt_user = Direktt_User::direktt_get_current_user();;
     $subscription_id = $direktt_user['direktt_user_id'] ?? '';
 
     direktt_send_review_messages( $subscription_id );
@@ -654,7 +655,7 @@ add_action( 'direktt/action/init_review', 'on_init_review' );
 
 function on_submit_review( $request ) {
     if ( array_key_exists( 'rating', $request ) ) {
-        global $direktt_user;
+        $direktt_user = Direktt_User::direktt_get_current_user();;
         $subscription_id = $direktt_user['direktt_user_id'] ?? '';
         $rating          = intval( $request['rating'] );
 
