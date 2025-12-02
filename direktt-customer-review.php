@@ -72,14 +72,14 @@ function direktt_customer_review_activation_check() {
     }
 }
 
-add_action( 'direktt_setup_settings_pages', 'setup_review_settings_page' );
+add_action( 'direktt_setup_settings_pages', 'direktt_customer_review_setup_settings_page' );
 
-function setup_review_settings_page() {
+function direktt_customer_review_setup_settings_page() {
     Direktt::add_settings_page(
         array(
             'id'       => 'review',
             'label'    => esc_html__( 'Customer Review Settings', 'direktt-customer-review' ),
-            'callback' => 'render_review_settings_page',
+            'callback' => 'direktt_customer_review_render_settings_page',
             'priority' => 2,
         )
     );
@@ -107,7 +107,7 @@ function direktt_customer_review_enqueue_scripts( $hook ) {
 	}
 }
 
-function render_review_settings_page() {
+function direktt_customer_review_render_settings_page() {
     $success = false;
 
     // Handle form submission
@@ -374,14 +374,14 @@ function render_review_settings_page() {
     <?php
 }
 
-add_action( 'direktt_setup_profile_tools', 'setup_review_profile_tools' );
+add_action( 'direktt_setup_profile_tools', 'direktt_customer_review_setup_profile_tools' );
 
-function setup_review_profile_tools() {
+function direktt_customer_review_setup_profile_tools() {
     Direktt_Profile::add_profile_tool(
         array(
             'id'         => 'review-profile-tool',
             'label'      => esc_html__( 'Reviews', 'direktt-customer-review' ),
-            'callback'   => 'render_review_profile_tool',
+            'callback'   => 'direktt_customer_review_render_profile_tool',
             'categories' => array(),
             'tags'       => array(),
             'priority'   => 2,
@@ -389,7 +389,7 @@ function setup_review_profile_tools() {
     );
 }
 
-function render_review_profile_tool() {
+function direktt_customer_review_render_profile_tool() {
     $subscription_id = isset( $_GET['subscriptionId'] ) ? sanitize_text_field( wp_unslash( $_GET['subscriptionId'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Justification: not a form processing, used for content rendering.
     $profile_user    = Direktt_User::get_user_by_subscription_id( $subscription_id );
     if ( ! $profile_user ) {
@@ -474,20 +474,20 @@ function render_review_profile_tool() {
     <?php
 }
 
-function direktt_review_add_meta_box() {
+function direktt_customer_review_add_meta_box() {
     add_meta_box(
         'direktt_review_program_meta_box',
         __( 'Reviews', 'direktt-customer-review' ),
-        'render_review_meta_box',
+        'direktt_customer_review_render_meta_box',
         'direkttusers',
         'side',
         'default'
     );
 }
 
-add_action( 'add_meta_boxes', 'direktt_review_add_meta_box' );
+add_action( 'add_meta_boxes', 'direktt_customer_review_add_meta_box' );
 
-function render_review_meta_box( $post ) {
+function direktt_customer_review_render_meta_box( $post ) {
     $user_id = $post->ID;
     $user    = Direktt_User::get_user_by_post_id( $user_id );
     if ( ! $user ) {
@@ -567,7 +567,7 @@ function render_review_meta_box( $post ) {
     <?php
 }
 
-function direktt_create_review_buttons(){
+function direktt_customer_review_create_buttons(){
 
     $review_min_rating = intval( get_option( 'direktt_review_min_rating', 1 ) );
     $review_max_rating = intval( get_option( 'direktt_review_max_rating', 5 ) );
@@ -606,7 +606,7 @@ function direktt_create_review_buttons(){
     return $review_message;
 }
 
-function direktt_send_review_messages( $subscription_id ) {
+function direktt_customer_review_send_messages( $subscription_id ) {
     $user         = Direktt_User::get_user_by_subscription_id( $subscription_id );
     $display_name = get_the_title( $user['ID'] );
 
@@ -618,7 +618,7 @@ function direktt_send_review_messages( $subscription_id ) {
         array()
     );
 
-    $review_message = direktt_create_review_buttons();
+    $review_message = direktt_customer_review_create_buttons();
 
     Direktt_Message::send_message( array( $subscription_id => $review_message ) );
 }
@@ -630,7 +630,7 @@ function handle_direktt_send_review_template() {
 
     $subscription_id = sanitize_text_field( wp_unslash( $_POST['subscriptionId'] ) );
 
-    direktt_send_review_messages( $subscription_id );
+    direktt_customer_review_send_messages( $subscription_id );
 
     wp_send_json_success( array( 'message' => esc_html__( 'Review template sent successfully.', 'direktt-customer-review' ) ) );
 }
@@ -639,11 +639,11 @@ function handle_direktt_send_review_template() {
 add_action( 'wp_ajax_direktt_send_review_template', 'handle_direktt_send_review_template' );
 add_action( 'wp_ajax_nopriv_direktt_send_review_template', 'handle_direktt_send_review_template' );
 
-function on_init_review() {
+function direktt_customer_review_on_init_review() {
     $direktt_user = Direktt_User::direktt_get_current_user();;
     $subscription_id = $direktt_user['direktt_user_id'] ?? '';
 
-    direktt_send_review_messages( $subscription_id );
+    direktt_customer_review_send_messages( $subscription_id );
 
     $data = array(
         'message' => esc_html__( 'Review messages sent successfully.', 'direktt-customer-review' ),
@@ -651,9 +651,9 @@ function on_init_review() {
     wp_send_json_success( $data, 200 );
 }
 
-add_action( 'direktt/action/init_review', 'on_init_review' );
+add_action( 'direktt/action/init_review', 'direktt_customer_review_on_init_review' );
 
-function on_submit_review( $request ) {
+function direktt_customer_review_on_submit_review( $request ) {
     if ( array_key_exists( 'rating', $request ) ) {
         $direktt_user = Direktt_User::direktt_get_current_user();;
         $subscription_id = $direktt_user['direktt_user_id'] ?? '';
@@ -711,7 +711,7 @@ function on_submit_review( $request ) {
 
         $data = array();
 
-        $review_message = direktt_create_review_buttons();
+        $review_message = direktt_customer_review_create_buttons();
         $new_content = json_decode($review_message['content']);
         $new_content->disabled = true;
         $new_content->msgObj[$rating-$review_min_rating]->accent = true;
@@ -725,4 +725,4 @@ function on_submit_review( $request ) {
     }
 }
 
-add_action( 'direktt/action/submit_review', 'on_submit_review', 10, 1 );
+add_action( 'direktt/action/submit_review', 'direktt_customer_review_on_submit_review', 10, 1 );
