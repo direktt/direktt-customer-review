@@ -374,9 +374,9 @@ function direktt_customer_review_render_settings_page() {
     <?php
 }
 
-add_action( 'direktt_setup_profile_tools', 'direktt_customer_review_setup_profile_tools' );
+add_action( 'direktt_setup_profile_tools', 'direktt_customer_review_setup_profile_tool' );
 
-function direktt_customer_review_setup_profile_tools() {
+function direktt_customer_review_setup_profile_tool() {
     Direktt_Profile::add_profile_tool(
         array(
             'id'         => 'review-profile-tool',
