@@ -380,7 +380,7 @@ function direktt_customer_review_setup_profile_tool() {
     Direktt_Profile::add_profile_tool(
         array(
             'id'         => 'review-profile-tool',
-            'label'      => esc_html__( 'Reviews', 'direktt-customer-review' ),
+            'label'      => esc_html__( 'Customer Review', 'direktt-customer-review' ),
             'callback'   => 'direktt_customer_review_render_profile_tool',
             'categories' => array(),
             'tags'       => array(),
