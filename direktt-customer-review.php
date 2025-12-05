@@ -623,7 +623,7 @@ function direktt_customer_review_send_messages( $subscription_id ) {
     Direktt_Message::send_message( array( $subscription_id => $review_message ) );
 }
 
-function handle_direktt_send_review_template() {
+function direktt_customer_review_handle_send_review_template() {
     if ( ! isset( $_POST['nonce'], $_POST['subscriptionId'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'direktt_send_review_template' ) ) {
         wp_send_json_error( array( 'error' => esc_html__( 'Invalid request.', 'direktt-customer-review' ) ) );
     }
@@ -636,8 +636,8 @@ function handle_direktt_send_review_template() {
 }
 
 
-add_action( 'wp_ajax_direktt_send_review_template', 'handle_direktt_send_review_template' );
-add_action( 'wp_ajax_nopriv_direktt_send_review_template', 'handle_direktt_send_review_template' );
+add_action( 'wp_ajax_direktt_send_review_template', 'direktt_customer_review_handle_send_review_template' );
+add_action( 'wp_ajax_nopriv_direktt_send_review_template', 'direktt_customer_review_handle_send_review_template' );
 
 function direktt_customer_review_on_init_review() {
     $direktt_user = Direktt_User::direktt_get_current_user();
