@@ -477,7 +477,7 @@ function direktt_customer_review_render_profile_tool() {
 function direktt_customer_review_add_meta_box() {
     add_meta_box(
         'direktt_review_program_meta_box',
-        __( 'Reviews', 'direktt-customer-review' ),
+        esc_html__( 'Customer Review', 'direktt-customer-review' ),
         'direktt_customer_review_render_meta_box',
         'direkttusers',
         'side',
