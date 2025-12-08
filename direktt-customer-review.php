@@ -467,7 +467,7 @@ function direktt_customer_review_render_profile_tool() {
 				echo '</tbody>';
 			echo '</table>';
 		} else {
-			echo '<p>' . esc_html__( 'No reviews found.', 'direktt-customer-review' ) . '</p>';
+			echo '<p>' . esc_html__( 'No reviews found', 'direktt-customer-review' ) . '</p>';
 		}
 		?>
     </div>
@@ -540,13 +540,13 @@ function direktt_customer_review_render_meta_box( $post ) {
                     });
                 });
             </script>
-        </div>
 		<?php
 		$reviews = get_post_meta( $user_id, 'direktt_reviews', true );
 		if ( is_array( $reviews ) && ! empty( $reviews ) ) {
 			$reviews = array_reverse( $reviews );
 			// TODO pitanje da li treba ograniciti broj review-a
 			// $reviews = array_slice( $reviews, 0, 20 );
+            echo '</div>';
 			echo '<table class="widefat striped">';
 				echo '<thead>';
 				echo '<tr><td>' . esc_html__( 'Time', 'direktt-customer-review' ) . ' </td><td> ' . esc_html__( 'Rating', 'direktt-customer-review' ) . '</td></tr>';
@@ -560,7 +560,8 @@ function direktt_customer_review_render_meta_box( $post ) {
 				echo '</tbody>';
 			echo '</table>';
 		} else {
-			echo '<p>' . esc_html__( 'No reviews found.', 'direktt-customer-review' ) . '</p>';
+			echo '<p>' . esc_html__( 'No reviews found', 'direktt-customer-review' ) . '</p>';
+            echo '</div>';
 		}
 		?>
     </div>
