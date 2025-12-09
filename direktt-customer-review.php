@@ -570,8 +570,7 @@ function direktt_customer_review_render_meta_box( $post ) {
 	<?php
 }
 
-function direktt_customer_review_create_buttons() {
-
+function direktt_customer_review_create_buttons( $subscription_id ) {
 	$review_min_rating = intval( get_option( 'direktt_review_min_rating', 1 ) );
 	$review_max_rating = intval( get_option( 'direktt_review_max_rating', 5 ) );
 
@@ -590,6 +589,7 @@ function direktt_customer_review_create_buttons() {
 				),
 				'retVars' => (object) array(
 					'rating' => "$ctr",
+                    'subscription_id' => "$subscription_id",
 				),
 			),
 		);
@@ -621,7 +621,7 @@ function direktt_customer_review_send_messages( $subscription_id ) {
 		array()
 	);
 
-	$review_message = direktt_customer_review_create_buttons();
+	$review_message = direktt_customer_review_create_buttons( $subscription_id );
 
 	Direktt_Message::send_message( array( $subscription_id => $review_message ) );
 }
@@ -657,9 +657,10 @@ function direktt_customer_review_on_init_review() {
 add_action( 'direktt/action/init_review', 'direktt_customer_review_on_init_review' );
 
 function direktt_customer_review_on_submit_review( $request ) {
-	if ( array_key_exists( 'rating', $request ) ) {
-		$direktt_user    = Direktt_User::direktt_get_current_user();
-		$subscription_id = $direktt_user['direktt_user_id'] ?? '';
+	if ( array_key_exists( 'rating', $request ) && array_key_exists( 'subscription_id', $request ) ) {
+		$subscription_id = $request['subscription_id'] ?? '';
+        $direktt_user    = Direktt_User::get_user_by_subscription_id( $subscription_id );
+        $display_name    = $direktt_user['direktt_display_name'] ?? '';
 		$rating          = intval( $request['rating'] );
 
 		$review_threshold                = floatval( get_option( 'direktt_review_threshold', 2 ) );
@@ -684,8 +685,6 @@ function direktt_customer_review_on_submit_review( $request ) {
 		$admin_template = intval( get_option( 'direktt_review_admin_template', 0 ) );
 
 		if ( $send_to_admin && $admin_template ) {
-			$display_name = $direktt_user['direktt_display_name'];
-
 			Direktt_Message::send_message_template_to_admin(
 				$admin_template,
 				array(
@@ -703,9 +702,8 @@ function direktt_customer_review_on_submit_review( $request ) {
 
 		$review_min_rating = intval( get_option( 'direktt_review_min_rating', 1 ) );
 
-		$profile_user = Direktt_User::get_user_by_subscription_id( $subscription_id );
-		$user_id      = $profile_user['ID'];
-		$reviews      = get_post_meta( $user_id, 'direktt_reviews', true );
+		$user_id = $direktt_user['ID'];
+		$reviews = get_post_meta( $user_id, 'direktt_reviews', true );
 		if ( ! is_array( $reviews ) ) {
 			$reviews = array();
 		}
@@ -714,7 +712,7 @@ function direktt_customer_review_on_submit_review( $request ) {
 
 		$data = array();
 
-		$review_message        = direktt_customer_review_create_buttons();
+		$review_message        = direktt_customer_review_create_buttons( $subscription_id );
 		$new_content           = json_decode( $review_message['content'] );
 		$new_content->disabled = true;
 		$new_content->msgObj[ $rating - $review_min_rating ]->accent = true;
