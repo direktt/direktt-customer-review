@@ -250,7 +250,6 @@ function direktt_customer_review_render_settings_page() {
 								</option>
 							<?php endforeach; ?>
 						</select>
-						<p class="description"><?php echo esc_html__( 'This message will be sent to the admin when a review is submitted.', 'direktt-customer-review' ); ?></p>
 						<p class="description"><?php echo esc_html__( 'You can use following dynamic placeholders in this template:', 'direktt-customer-review' ); ?></p>
 						<p class="description"><code><?php echo esc_html( '#display_name#' ); ?></code><?php echo esc_html__( ' - user\'s display name.', 'direktt-customer-review' ); ?></p>
 						<p class="description"><code><?php echo esc_html( '#subscription_id#' ); ?></code><?php echo esc_html__( ' - user\'s subscription ID.', 'direktt-customer-review' ); ?></p>
