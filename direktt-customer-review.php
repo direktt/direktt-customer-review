@@ -464,9 +464,8 @@ function direktt_customer_review_render_profile_tool() {
 				echo '</thead>';
 				echo '<tbody>';
 			foreach ( $reviews as $review ) {
-				$date   = human_time_diff( $review['timestamp'] ) . ' ago';
 				$rating = intval( $review['rating'] );
-				echo '<tr><td>' . esc_html( $date ) . ' </td><td> ' . esc_html( $rating ) . '</td></tr>';
+				echo '<tr><td>' . esc_html( Direktt_Public::direktt_echo_timestamp( $review['timestamp'], 'ago' ) ) . ' </td><td> ' . esc_html( $rating ) . '</td></tr>';
 			}
 				echo '</tbody>';
 			echo '</table>';
@@ -555,9 +554,8 @@ function direktt_customer_review_render_meta_box( $post ) {
 				echo '</thead>';
 				echo '<tbody>';
 			foreach ( $reviews as $review ) {
-				$date   = wp_date( 'Y-m-d H:i:s', $review['timestamp'] );
 				$rating = intval( $review['rating'] );
-				echo '<tr><td>' . esc_html( $date ) . '</td><td>' . esc_html( $rating ) . '</td></tr>';
+				echo '<tr><td>' . esc_html( Direktt_Public::direktt_echo_timestamp( $review['timestamp'], 'ago' ) ) . '</td><td>' . esc_html( $rating ) . '</td></tr>';
 			}
 				echo '</tbody>';
 			echo '</table>';
@@ -696,7 +694,7 @@ function direktt_customer_review_on_submit_review( $request ) {
 		}
 
 		$review = array(
-			'timestamp' => time(),
+			'timestamp' => current_time( 'mysql' ),
 			'rating'    => $rating,
 		);
 
