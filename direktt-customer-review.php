@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Direktt Customer Review
  * Description: Direktt Customer Review Direktt Plugin
- * Version: 1.0.2
+ * Version: 1.0.0
  * Author: Direktt
  * Author URI: https://direktt.com/
  * License: GPL2
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$direktt_customer_review_plugin_version              = '1.0.2';
+$direktt_customer_review_plugin_version              = '1.0.0';
 $direktt_customer_review_github_update_cache_allowed = true;
 
 require_once plugin_dir_path( __FILE__ ) . 'direktt-github-updater/class-direktt-github-updater.php';
